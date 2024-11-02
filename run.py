@@ -1,4 +1,5 @@
 from habit_visualizer.notion_client import NotionClient
+from habit_visualizer.visualizer import plot
 from dotenv import load_dotenv
 import os
 import json
@@ -21,7 +22,8 @@ def run():
             with open("data/habit_data.json", "r") as file:
                 data = json.load(file)
     
-    print(data)
+    plot_output_path = "data/plot.png"
+    plot(plot_output_path)
 
 if __name__ == "__main__":
     run()
