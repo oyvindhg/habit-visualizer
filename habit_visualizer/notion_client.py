@@ -1,6 +1,6 @@
-import requests
 from typing import Any
 from dataclasses import dataclass
+import requests
 
 @dataclass
 class NotionClientSettings:
@@ -12,7 +12,7 @@ class NotionClient:
     def __init__(self, auth_key: str):
         self.settings = NotionClientSettings
         self.auth_key = auth_key
-    
+
     def get_data(self, table_id: str) -> dict[str, Any]:
         path = "/v1/databases/" + table_id + "/query"
         url = self.settings.base_url + path
@@ -31,7 +31,7 @@ class NotionClient:
                 }
             ]
         }
-        
+
         data = []
         cursor = None
 
