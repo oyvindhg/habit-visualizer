@@ -5,14 +5,19 @@ from dotenv import load_dotenv
 from habit_visualizer.notion_client import NotionClient
 from habit_visualizer.visualizer import create_heatmap
 from habit_visualizer.habit_data_transformer import HabitDataTransformer
+from habit_visualizer.custom_entry_getters import get_rich_text_time_as_hours
 
 def run():
     client = "json"
-    property_name = "Drinks"
+    property_name = "Sleep"
     category_count = 5
-    category_labels = ["0", "1-2", "3-5", "6+"]
-    category_limits = [0, 0.5, 2.5, 5.5, 6]
-    color_style = 'YlOrBr'  # PuBu
+    category_labels = ["0-5", "5-6", "6-7", "7-8", "8+"]
+    # category_labels = ["No", "Yes"]
+    category_limits = [0, 5, 6, 7, 8, 9]
+    # category_limits = [0, 0.5, 1]
+    color_style = 'RdYlGn' # 'YlOrBr'  # 'PuBu'
+    custom_entry_getter = get_rich_text_time_as_hours
+    # custom_entry_getter = None
 
     load_dotenv()
     auth_key = os.getenv("NOTION_API_SECRET")
@@ -33,7 +38,8 @@ def run():
         property_name, 
         category_count=category_count, 
         category_labels=category_labels,
-        category_limits=category_limits
+        category_limits=category_limits,
+        custom_entry_getter=custom_entry_getter
     )
     create_heatmap(habit_data, color_style, f"data/{property_name}.png")
 

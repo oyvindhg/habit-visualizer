@@ -20,7 +20,10 @@ class HabitDataTransformer:
         if self.year != entry_year:
             raise ValueError(f"Year {entry_year} in entry number {entry_number} is not equal to the first recorded year {self.year}")
 
-    def validate_and_transform(self, property_name: str, category_count: int, category_labels: list[str], category_limits: list[int]) -> HabitData:
+    def get_entry_default(self, json_entry: dict[str, Any], property_name: str, data_type: str) -> int:
+        return json_entry['properties'][property_name][data_type]
+
+    def validate_and_transform(self, property_name: str, category_count: int, category_labels: list[str], category_limits: list[int], custom_entry_getter=None) -> HabitData:
         full_year_date_times = pd.date_range(f"{self.year}-01-01", f"{self.year}-12-31")
         data = []
         data_type = self.json_data[0]['properties'][property_name]['type']
@@ -32,11 +35,11 @@ class HabitDataTransformer:
                 self._validate_entry(entry_number)
                 entry_date = datetime.strptime(self.json_data[entry_number]['properties']['Date']['date']['start'], '%Y-%m-%d').date()
                 if date == entry_date:
-                    data_entry = self.json_data[entry_number]['properties'][property_name][data_type]
+                    entry_getter = custom_entry_getter or self.get_entry_default
+                    data_entry = entry_getter(self.json_data[entry_number], property_name, data_type)
                     data.append(data_entry)
                     entry_number += 1
                 else:
-                    print(f"date: {date}, ed: {entry_date}")
                     data.append(None)
             else:
                 data.append(None)
