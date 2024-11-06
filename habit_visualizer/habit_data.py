@@ -5,7 +5,6 @@ import numpy as np
 class HabitData:
     title: str
     year: int
-    category_count: int
-    category_limits: list[int]
-    category_labels: list[str]
+    boundaries: list[int]
+    labels: list[str]
     data: np.ndarray

@@ -58,15 +58,15 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
     plot_data = pd.DataFrame(weekly_data.tolist())
 
     # Define heatmap colors and color labels
-    colormap = plt.cm.get_cmap(color_style, habit_data.category_count)
+    boundaries = habit_data.boundaries
+    colormap = plt.cm.get_cmap(color_style, len(boundaries))
     colormap.set_bad(color='white')
-    boundaries = habit_data.category_limits
     norm = mcolors.BoundaryNorm(boundaries, colormap.N, clip=True)
     plt.imshow(plot_data, cmap=colormap, norm=norm, aspect="auto")
 
     color_ticks = [(boundaries[i] + boundaries[i+1]) / 2 for i in range(len(boundaries) - 1)]
     colorbar = plt.colorbar(ticks=color_ticks, shrink=0.2, aspect=10)
-    colorbar.ax.set_yticklabels(habit_data.category_labels)
+    colorbar.ax.set_yticklabels(habit_data.labels)
     colorbar.ax.tick_params(axis='y', length=0)
 
     plt.savefig(output_path)
