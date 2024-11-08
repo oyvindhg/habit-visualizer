@@ -1,19 +1,212 @@
-{
-    "property": "Sleep",
-    "color_style": "RdYlGn",
-    "labels": [
-        "0-5",
-        "5-6",
-        "6-7",
-        "7-8",
-        "8+"
-    ],
-    "boundaries": [
-        0,
-        5,
-        6,
-        7,
-        8,
-        10
-    ]
-}
+[
+    {
+        "property": "Mood",
+        "color_style": "RdYlGn",
+        "labels": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+        ],
+        "boundaries": [
+            0,
+            0.5,
+            1.5,
+            2.5,
+            3.5,
+            4.5,
+            5.5,
+            6.5,
+            7.5,
+            8.5,
+            9.5,
+            10
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "Sleep",
+        "color_style": "RdYlGn",
+        "labels": [
+            "0-5",
+            "5-6",
+            "6-7",
+            "7-8",
+            "8+"
+        ],
+        "boundaries": [
+            0,
+            5,
+            6,
+            7,
+            8,
+            10
+        ],
+        "custom_function": "get_rich_text_time_as_hours"
+    },
+    {
+        "property": "Sleep score",
+        "color_style": "RdYlGn",
+        "labels": [
+            "0-59",
+            "60-64",
+            "65-69",
+            "70-74",
+            "75-79",
+            "80-84",
+            "85-89",
+            "90-94",
+            "95-100"
+        ],
+        "boundaries": [
+            0,
+            60,
+            65,
+            70,
+            75,
+            80,
+            85,
+            90,
+            95,
+            100
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "Worked out",
+        "color_style": "RdYlGn",
+        "labels": [
+            "0-59",
+            "60-64",
+            "65-69",
+            "70-74",
+            "75-79",
+            "80-84",
+            "85-89",
+            "90-94",
+            "95-100"
+        ],
+        "boundaries": [
+            0,
+            60,
+            65,
+            70,
+            75,
+            80,
+            85,
+            90,
+            95,
+            100
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "Drinks",
+        "color_style": "YlOrBr",
+        "labels": [
+            "0",
+            "1-2",
+            "3-5",
+            "6+"
+        ],
+        "boundaries": [
+            0,
+            0.5,
+            2.5,
+            5.5,
+            6
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "Cooked",
+        "color_style": "PuBu",
+        "labels": [
+            "No",
+            "Yes"
+        ],
+        "boundaries": [
+            0,
+            0.5,
+            1
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "Dating",
+        "color_style": "PuBu",
+        "labels": [
+            "No",
+            "Yes"
+        ],
+        "boundaries": [
+            0,
+            0.5,
+            1
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "Friends",
+        "color_style": "PuBu",
+        "labels": [
+            "No",
+            "Yes"
+        ],
+        "boundaries": [
+            0,
+            0.5,
+            1
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "Japanese",
+        "color_style": "PuBu",
+        "labels": [
+            "No",
+            "Yes"
+        ],
+        "boundaries": [
+            0,
+            0.5,
+            1
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "Programmed",
+        "color_style": "PuBu",
+        "labels": [
+            "No",
+            "Yes"
+        ],
+        "boundaries": [
+            0,
+            0.5,
+            1
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "Worked out",
+        "color_style": "PuBu",
+        "labels": [
+            "No",
+            "Yes"
+        ],
+        "boundaries": [
+            0,
+            0.5,
+            1
+        ],
+        "custom_function": null
+    }
+]

@@ -2,5 +2,9 @@
 .idea/
 .vscode/
 __pycache__/
-/data/
 .env
+
+# Directories
+/data/
+/output/
+/configs/
