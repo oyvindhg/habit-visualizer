@@ -25,7 +25,8 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
             day_of_week = row["day_of_week"]
             plt.plot([-0.5, day_of_week + 0.5], [week - 0.5, week - 0.5], color="black", linewidth=3)
             plt.plot([day_of_week + 0.5, 6.5], [week - 1.5, week - 1.5], color="black", linewidth=3)
-            plt.plot([day_of_week + 0.5, day_of_week + 0.5], [week - 1.5, week - 0.5], color="black", linewidth=3)
+            if day_of_week < 6:
+                plt.plot([day_of_week + 0.5, day_of_week + 0.5], [week - 1.5, week - 0.5], color="black", linewidth=3)
 
     # Remove border around the plot
     plt.gca().spines["top"].set_visible(False)
