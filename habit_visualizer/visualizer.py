@@ -68,6 +68,6 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
     color_ticks = [(boundaries[i] + boundaries[i+1]) / 2 for i in range(len(boundaries) - 1)]
     colorbar = plt.colorbar(ticks=color_ticks, shrink=0.2, aspect=10)
     colorbar.ax.set_yticklabels(habit_data.labels)
-    colorbar.ax.tick_params(axis='y', length=0)
+    colorbar.ax.tick_params(axis='both', which='both', length=0)
 
     plt.savefig(output_path)
