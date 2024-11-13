@@ -30,7 +30,12 @@ NOTION_TABLE_ID=your_table_id
 
 ## Run
 
-Run the visualizer:
+Download latest data from Notion:
 ```
-python run.py
+python downloader.py
+```
+
+Visualize data:
+```
+python visualizer.py
 ```
