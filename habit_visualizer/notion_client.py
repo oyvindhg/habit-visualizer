@@ -39,7 +39,7 @@ class NotionClient:
             if cursor:
                 body["start_cursor"] = cursor
 
-            response = requests.post(url, headers=headers, json=body)
+            response = requests.post(url, headers=headers, json=body, timeout=30)
             response.raise_for_status()
 
             page_data = response.json()
