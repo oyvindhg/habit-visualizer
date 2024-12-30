@@ -4,8 +4,13 @@ import pandas as pd
 import numpy as np
 from habit_visualizer.habit_data import HabitData
 
-
 def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
+    title_color = "white"
+    label_color = "lightgray"
+    background_color = "dimgray"
+    missing_color = "gray"
+    fontname = "DejaVu Sans"
+
     dates = pd.date_range(f"{habit_data.year}-01-01", f"{habit_data.year}-12-31")
     df = pd.DataFrame({"date": dates, "value": habit_data.data})
     
@@ -14,19 +19,23 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
     # Some days can be counted in 'week 1' of the next year, so we change those to week 53 of the current year
     df["week"] = df["date"].apply(lambda x: x.isocalendar().week if x.month != 12 or x.isocalendar().week != 1 else 53)
 
-    plt.figure(figsize=(5,20))
-    plt.title(f"{habit_data.title} in {habit_data.year}", pad=30)
+    scaler = 0.5
+    fig = plt.figure(figsize=(7 * scaler, 40 * scaler))
+    fig.patch.set_facecolor(background_color)
+    plt.subplots_adjust(top=0.93, bottom=-0.1, left=0.15, right=0.9)
+    plt.title(f"{habit_data.title.upper()} IN {habit_data.year}", fontname=fontname, pad=40, color=title_color, weight='bold')
 
     # Draw separation lines between months
     month_end_dates = df[df["date"].dt.is_month_end]
+    linewidth = 5
     for i, (_, row) in enumerate(month_end_dates.iterrows()):
         if i < len(month_end_dates) - 1:
             week = row["week"]
             day_of_week = row["day_of_week"]
-            plt.plot([-0.5, day_of_week + 0.5], [week - 0.5, week - 0.5], color="black", linewidth=3)
-            plt.plot([day_of_week + 0.5, 6.5], [week - 1.5, week - 1.5], color="black", linewidth=3)
+            plt.plot([-0.5, day_of_week + 0.5], [week - 0.5, week - 0.5], color=background_color, linewidth=linewidth)
+            plt.plot([day_of_week + 0.5, 6.5], [week - 1.5, week - 1.5], color=background_color, linewidth=linewidth)
             if day_of_week < 6:
-                plt.plot([day_of_week + 0.5, day_of_week + 0.5], [week - 1.5, week - 0.5], color="black", linewidth=3)
+                plt.plot([day_of_week + 0.5, day_of_week + 0.5], [week - 1.5, week - 0.5], color=background_color, linewidth=linewidth)
 
     # Remove border around the plot
     plt.gca().spines["top"].set_visible(False)
@@ -35,13 +44,13 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
     plt.gca().spines["bottom"].set_visible(False)
 
     # Configure axis ticks
-    plt.xticks(range(7), ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
+    plt.xticks(range(7), ["M", "T", "W", "T", "F", "S", "S"], fontname=fontname, color=label_color, weight='bold')
     plt.gca().xaxis.tick_top()
     month_starts = df[df["date"].dt.is_month_start]
     month_weeks = month_starts.groupby(month_starts["date"].dt.month).apply(
         lambda x: x["week"].iloc[0] + (1 if x["date"].dt.weekday.iloc[0] != 0 else 0)
     )
-    plt.yticks(month_weeks, ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])
+    plt.yticks(month_weeks, ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"], fontname=fontname, color=label_color, weight='bold')
     plt.tick_params(axis='both', which='both', length=0)
 
     # Find calendar start and end offsets and create heatmap
@@ -61,13 +70,14 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
     # Define heatmap colors and color labels
     boundaries = habit_data.boundaries
     colormap = plt.cm.get_cmap(color_style, len(boundaries))
-    colormap.set_bad(color='white')
+    colormap.set_bad(color=missing_color)
     norm = mcolors.BoundaryNorm(boundaries, colormap.N, clip=True)
     plt.imshow(plot_data, cmap=colormap, norm=norm, aspect="auto")
 
     color_ticks = [(boundaries[i] + boundaries[i+1]) / 2 for i in range(len(boundaries) - 1)]
-    colorbar = plt.colorbar(ticks=color_ticks, shrink=0.2, aspect=10)
-    colorbar.ax.set_yticklabels(habit_data.labels)
+    colorbar = plt.colorbar(orientation="horizontal", ticks=color_ticks, pad=0.02)
+    colorbar.ax.set_xticklabels(habit_data.labels, fontname=fontname, color=label_color)
     colorbar.ax.tick_params(axis='both', which='both', length=0)
+    colorbar.outline.set_visible(False)
 
     plt.savefig(output_path)
