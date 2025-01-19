@@ -1,7 +1,7 @@
 [
     {
         "property": "Mood",
-        "title": "Ranking my mood",
+        "title": "Rating my mood",
         "color_style": "RdYlGn",
         "labels": [
             "1",

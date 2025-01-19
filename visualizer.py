@@ -3,17 +3,20 @@ import argparse
 from pathlib import Path
 from habit_visualizer.heatmap_visualizer import create_heatmap
 from habit_visualizer.habit_data_transformer import HabitDataTransformer
-from habit_visualizer.custom_entry_getters import get_rich_text_time_as_hours
+from habit_visualizer.custom_entry_getters import get_rich_text_time_as_hours, get_from_multiselect
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool for visualizing daily habits from a Notion table in heatmaps")
     parser.add_argument('-c', '--config', type=str, default="config.json", help="Path to JSON config file")
-    parser.add_argument('-y', '--year', type=int, default=2024, help="Year to visualize")
+    parser.add_argument('-y', '--year', type=int, default=2025, help="Year to visualize")
     return parser.parse_args()
 
 
 def get_custom_function_map():
-    return {"get_rich_text_time_as_hours": get_rich_text_time_as_hours}
+    return {
+        "get_rich_text_time_as_hours": get_rich_text_time_as_hours,
+        "get_from_multiselect": get_from_multiselect
+        }
 
 
 def run():
@@ -23,7 +26,7 @@ def run():
 
     custom_function_map = get_custom_function_map()
 
-    Path("data/{year}").mkdir(exist_ok=True)
+    Path(f"data/{year}").mkdir(exist_ok=True)
     with open(f"data/{year}/habit_data.json", "r", encoding="utf-8") as file:
         json_data = json.load(file)
 

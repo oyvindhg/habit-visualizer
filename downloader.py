@@ -8,7 +8,7 @@ from habit_visualizer.notion_client import NotionClient
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool to download habit tracker data")
-    parser.add_argument('-y', '--year', type=int, default=2024, help="Year to visualize")
+    parser.add_argument('-y', '--year', type=int, default=2025, help="Year to visualize")
     return parser.parse_args()
 
 def run():

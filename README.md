@@ -25,17 +25,21 @@ Set the Notion API secret and the database table ID as environment variables, or
 
 ```
 NOTION_API_SECRET=your_api_secret
-NOTION_TABLE_ID=your_table_id
+NOTION_TABLE_{year}_ID=your_table_id
 ```
 
 ## Run
 
-Download latest data from Notion:
+### Download data
 ```
-python downloader.py
+python downloader.py -y 2025
 ```
+`-y` specifies the year of the data, defaulting to `2025`
 
-Visualize data:
+### Visualize data
 ```
-python visualizer.py
+python visualizer.py -y 2025 -c configs/all-properties-2025.json
 ```
+`-y` specifies the year of the data, defaulting to `2025`
+
+`-c` specifies the path to the config file which specifies the properties to be visualized, defaulting to `config.json`

@@ -26,7 +26,8 @@ class HabitDataTransformer:
     def validate_and_transform(self, property_name: str, title: str, labels: list[str], boundaries: list[int], custom_entry_getter=None) -> HabitData:
         full_year_date_times = pd.date_range(f"{self.year}-01-01", f"{self.year}-12-31")
         data = []
-        data_type = self.json_data[0]['properties'][property_name]['type']
+        main_property_name = property_name.split('-')[0]
+        data_type = self.json_data[0]['properties'][main_property_name]['type']
         entry_number = 0
         for date_time in full_year_date_times:
             date = date_time.date()
