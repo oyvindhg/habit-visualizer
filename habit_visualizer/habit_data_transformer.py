@@ -23,7 +23,7 @@ class HabitDataTransformer:
     def get_entry_default(self, json_entry: dict[str, Any], property_name: str, data_type: str) -> int:
         return json_entry['properties'][property_name][data_type]
 
-    def validate_and_transform(self, property_name: str, labels: list[str], boundaries: list[int], custom_entry_getter=None) -> HabitData:
+    def validate_and_transform(self, property_name: str, title: str, labels: list[str], boundaries: list[int], custom_entry_getter=None) -> HabitData:
         full_year_date_times = pd.date_range(f"{self.year}-01-01", f"{self.year}-12-31")
         data = []
         data_type = self.json_data[0]['properties'][property_name]['type']
@@ -45,7 +45,7 @@ class HabitDataTransformer:
                 data.append(None)
 
         return HabitData(
-            title=property_name,
+            title=title,
             year=self.year,
             boundaries=boundaries,
             labels=labels,

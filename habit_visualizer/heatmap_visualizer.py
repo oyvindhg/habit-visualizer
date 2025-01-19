@@ -22,10 +22,10 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
     scaler = 0.5
     fig = plt.figure(figsize=(7 * scaler, 30 * scaler))
     fig.patch.set_facecolor(background_color)
-    plt.subplots_adjust(top=0.93, bottom=-0.1, left=0.25, right=0.8)
+    plt.subplots_adjust(top=0.91, bottom=-0.1, left=0.25, right=0.76)
     ax = plt.gca()
-    ax.text(0.5, 1.06, f"{habit_data.year}",transform=ax.transAxes, fontsize=10, fontname=fontname, color=title_color, ha='center')
-    ax.text(0.5, 1.03, f"{habit_data.title.upper()}",transform=ax.transAxes, fontsize=16, fontname=fontname, color=title_color, weight='bold', ha='center')
+    ax.text(0.5, 1.07, f"{habit_data.year}",transform=ax.transAxes, fontsize=10, fontname=fontname, color=title_color, ha='center')
+    ax.text(0.5, 1.05, f"{habit_data.title.upper()}",transform=ax.transAxes, fontsize=12, fontname=fontname, color=title_color, weight='bold', ha='center')
     
     # plt.title(f"{habit_data.title.upper()} IN {habit_data.year}", fontname=fontname, pad=40, color=title_color, weight='bold')
 

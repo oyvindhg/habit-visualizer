@@ -33,6 +33,7 @@ def run():
     Path("output").mkdir(exist_ok=True)
     for config in configs:
         property_name = config["property"]
+        title = config["title"]
         labels = config["labels"]
         boundaries = config["boundaries"]
         color_style = config["color_style"]
@@ -44,6 +45,7 @@ def run():
             
         habit_data = habit_data_transformer.validate_and_transform(
             property_name=property_name,
+            title=title,
             labels=labels,
             boundaries=boundaries,
             custom_entry_getter=custom_entry_getter

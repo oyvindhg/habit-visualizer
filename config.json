@@ -1,9 +1,9 @@
 [
     {
         "property": "Mood",
+        "title": "Ranking my mood",
         "color_style": "RdYlGn",
         "labels": [
-            "0",
             "1",
             "2",
             "3",
@@ -16,8 +16,7 @@
             "10"
         ],
         "boundaries": [
-            0,
-            0.5,
+            1,
             1.5,
             2.5,
             3.5,
@@ -33,6 +32,7 @@
     },
     {
         "property": "Sleep",
+        "title": "Hours of sleep",
         "color_style": "RdYlGn",
         "labels": [
             "0-5",
@@ -53,62 +53,28 @@
     },
     {
         "property": "Sleep score",
+        "title": "Fitbit sleep score",
         "color_style": "RdYlGn",
         "labels": [
             "0-59",
-            "60-64",
-            "65-69",
-            "70-74",
-            "75-79",
-            "80-84",
-            "85-89",
-            "90-94",
-            "95-100"
+            "60-69",
+            "70-79",
+            "80-89",
+            "90-100"
         ],
         "boundaries": [
             0,
             60,
-            65,
             70,
-            75,
             80,
-            85,
             90,
-            95,
-            100
-        ],
-        "custom_function": null
-    },
-    {
-        "property": "Worked out",
-        "color_style": "RdYlGn",
-        "labels": [
-            "0-59",
-            "60-64",
-            "65-69",
-            "70-74",
-            "75-79",
-            "80-84",
-            "85-89",
-            "90-94",
-            "95-100"
-        ],
-        "boundaries": [
-            0,
-            60,
-            65,
-            70,
-            75,
-            80,
-            85,
-            90,
-            95,
             100
         ],
         "custom_function": null
     },
     {
         "property": "Drinks",
+        "title": "Number of alcolholic drinks",
         "color_style": "YlOrBr",
         "labels": [
             "0",
@@ -127,7 +93,8 @@
     },
     {
         "property": "Cooked",
-        "color_style": "PuBu",
+        "title": "Did I cook dinner?",
+        "color_style": "Oranges",
         "labels": [
             "No",
             "Yes"
@@ -141,7 +108,8 @@
     },
     {
         "property": "Dating",
-        "color_style": "PuBu",
+        "title": "Did I go on a date?",
+        "color_style": "PuRd",
         "labels": [
             "No",
             "Yes"
@@ -155,7 +123,8 @@
     },
     {
         "property": "Friends",
-        "color_style": "PuBu",
+        "title": "Did I meet friends?",
+        "color_style": "Greens",
         "labels": [
             "No",
             "Yes"
@@ -169,7 +138,8 @@
     },
     {
         "property": "Japanese",
-        "color_style": "PuBu",
+        "title": "Did I study Japanese?",
+        "color_style": "Reds",
         "labels": [
             "No",
             "Yes"
@@ -183,7 +153,8 @@
     },
     {
         "property": "Programmed",
-        "color_style": "PuBu",
+        "title": "Did I program in my free time?",
+        "color_style": "Blues",
         "labels": [
             "No",
             "Yes"
@@ -197,7 +168,8 @@
     },
     {
         "property": "Worked out",
-        "color_style": "PuBu",
+        "title": "Did I work out?",
+        "color_style": "GnBu",
         "labels": [
             "No",
             "Yes"
