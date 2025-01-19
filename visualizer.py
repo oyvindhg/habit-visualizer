@@ -8,6 +8,7 @@ from habit_visualizer.custom_entry_getters import get_rich_text_time_as_hours
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool for visualizing daily habits from a Notion table in heatmaps")
     parser.add_argument('-c', '--config', type=str, default="config.json", help="Path to JSON config file")
+    parser.add_argument('-y', '--year', type=int, default=2024, help="Year to visualize")
     return parser.parse_args()
 
 
@@ -18,11 +19,12 @@ def get_custom_function_map():
 def run():
     args = parse_arguments()
     config_path = args.config
+    year = args.year
 
     custom_function_map = get_custom_function_map()
 
-    Path("data").mkdir(exist_ok=True)
-    with open("data/habit_data.json", "r", encoding="utf-8") as file:
+    Path("data/{year}").mkdir(exist_ok=True)
+    with open(f"data/{year}/habit_data.json", "r", encoding="utf-8") as file:
         json_data = json.load(file)
 
     habit_data_transformer = HabitDataTransformer(json_data)
@@ -30,7 +32,7 @@ def run():
     with open(config_path, 'r', encoding="utf-8") as config_file:
         configs = json.load(config_file)
 
-    Path("output").mkdir(exist_ok=True)
+    Path(f"output/{year}").mkdir(exist_ok=True)
     for config in configs:
         property_name = config["property"]
         title = config["title"]
@@ -51,7 +53,7 @@ def run():
             custom_entry_getter=custom_entry_getter
         )
 
-        create_heatmap(habit_data, color_style, f"output/{property_name}.png")
+        create_heatmap(habit_data, color_style, f"output/{year}/{property_name}.png")
 
 if __name__ == "__main__":
     run()
