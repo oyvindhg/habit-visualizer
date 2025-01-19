@@ -20,10 +20,14 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
     df["week"] = df["date"].apply(lambda x: x.isocalendar().week if x.month != 12 or x.isocalendar().week != 1 else 53)
 
     scaler = 0.5
-    fig = plt.figure(figsize=(7 * scaler, 40 * scaler))
+    fig = plt.figure(figsize=(7 * scaler, 30 * scaler))
     fig.patch.set_facecolor(background_color)
-    plt.subplots_adjust(top=0.93, bottom=-0.1, left=0.15, right=0.9)
-    plt.title(f"{habit_data.title.upper()} IN {habit_data.year}", fontname=fontname, pad=40, color=title_color, weight='bold')
+    plt.subplots_adjust(top=0.93, bottom=-0.1, left=0.25, right=0.8)
+    ax = plt.gca()
+    ax.text(0.5, 1.06, f"{habit_data.year}",transform=ax.transAxes, fontsize=10, fontname=fontname, color=title_color, ha='center')
+    ax.text(0.5, 1.03, f"{habit_data.title.upper()}",transform=ax.transAxes, fontsize=16, fontname=fontname, color=title_color, weight='bold', ha='center')
+    
+    # plt.title(f"{habit_data.title.upper()} IN {habit_data.year}", fontname=fontname, pad=40, color=title_color, weight='bold')
 
     # Draw separation lines between months
     month_end_dates = df[df["date"].dt.is_month_end]
@@ -56,8 +60,8 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
     # Find calendar start and end offsets and create heatmap
     start_day_of_week = df["day_of_week"].iloc[0]
     end_day_of_week = df["day_of_week"].iloc[-1]
-    first_week_empty = [np.nan] * start_day_of_week
-    last_week_empty = [np.nan] * (6 - end_day_of_week)
+    first_week_empty = [-999] * start_day_of_week
+    last_week_empty = [-999] * (6 - end_day_of_week)
 
     weekly_data = (
         df.groupby("week")["value"]
@@ -71,7 +75,8 @@ def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):
     boundaries = habit_data.boundaries
     colormap = plt.cm.get_cmap(color_style, len(boundaries))
     colormap.set_bad(color=missing_color)
-    norm = mcolors.BoundaryNorm(boundaries, colormap.N, clip=True)
+    colormap.set_under(color=background_color)
+    norm = mcolors.BoundaryNorm(boundaries, colormap.N, clip=False)
     plt.imshow(plot_data, cmap=colormap, norm=norm, aspect="auto")
 
     color_ticks = [(boundaries[i] + boundaries[i+1]) / 2 for i in range(len(boundaries) - 1)]
