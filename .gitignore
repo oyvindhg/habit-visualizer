@@ -8,3 +8,6 @@ __pycache__/
 /data/
 /output/
 /configs/
+
+# Fitbit token file
+fitbit-tokens.json
