@@ -1,6 +1,6 @@
 # Habit Visualizer
 
-A visualization tool for habit tracking in Notion
+A visualization tool for Fitbit data and habit tracking in Notion
 
 
 ## Requirements
@@ -35,13 +35,26 @@ NOTION_API_SECRET=your_api_secret
 NOTION_TABLE_{year}_ID=your_database_id
 ```
 
+### Fitbit setup
+Register a new application at [https://dev.fitbit.com/apps/new](https://dev.fitbit.com/apps/new). The application needs to be of "Server" type.
+
+After creating the application, copy the `OAuth 2.0 Client ID` and `Client Secret` as environment variables, or into a `.env` file on the project root level:
+
+```
+FITBIT_CLIENT_ID=your_oath_2.0_client_id
+FITBIT_CLIENT_SECRET=your_client_secret
+```
+
+
 ## Run
 
 ### Download data
 ```
-python downloader.py -y 2025
+python downloader.py -y 2025 -w fitbit
 ```
 `-y` specifies the year of the data, defaulting to `2025`
+
+`-w` specifies the website to download data from, defaulting to `notion`. Only `notion` and `fitbit` are valid options.
 
 ### Visualize data
 ```
