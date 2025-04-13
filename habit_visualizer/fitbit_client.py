@@ -2,10 +2,8 @@ from dataclasses import dataclass
 import json
 import os
 import time
-from typing import Any
 from urllib.parse import urlencode
 import base64
-import fitbit
 
 import requests
 
@@ -94,13 +92,28 @@ class FitbitClient:
         return tokens["access_token"]
         
 
-    def get_data(self) -> dict[str, Any]:
+    def download_data(self, data_path: str) -> None:
 
         headers = {
             "Authorization": f"Bearer {self.access_token}"
         }
-        
-        url = "https://api.fitbit.com/1.2/user/-/sleep/date/today.json"
 
-        response = requests.get(url, headers=headers, timeout=30)
-        return response.json()
+        for quarter in range(1, 5):
+
+            match quarter:
+                case 1:
+                    dates = "2025-01-01/2025-03-31"
+                case 2:
+                    dates = "2025-04-01/2025-06-30"
+                case 3:
+                    dates = "2025-07-01/2025-09-30"
+                case _:
+                    dates = "2025-10-01/2025-12-31"
+
+            url = f"https://api.fitbit.com/1.2/user/-/sleep/date/{dates}.json"
+
+            response = requests.get(url, headers=headers, timeout=30)
+            data = response.json()
+
+            with open(f"{data_path}/fitbit_sleep_q{quarter}.json", "w", encoding="utf-8") as file:
+                json.dump(data, file)

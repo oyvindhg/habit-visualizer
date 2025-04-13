@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import pandas as pd
-import numpy as np
 from habit_visualizer.habit_data import HabitData
 
 def create_heatmap(habit_data: HabitData, color_style: str, output_path: str):

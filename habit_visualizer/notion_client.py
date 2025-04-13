@@ -1,4 +1,4 @@
-from typing import Any
+import json
 from dataclasses import dataclass
 import requests
 
@@ -9,12 +9,13 @@ class NotionClientSettings:
 
 
 class NotionClient:
-    def __init__(self, auth_key: str):
+    def __init__(self, auth_key: str, table_id: str):
         self.settings = NotionClientSettings
         self.auth_key = auth_key
+        self.table_id = table_id
 
-    def get_data(self, table_id: str) -> dict[str, Any]:
-        path = "/v1/databases/" + table_id + "/query"
+    def download_data(self, data_path: str) -> None:
+        path = "/v1/databases/" + self.table_id + "/query"
         url = self.settings.base_url + path
 
         headers = {
@@ -50,4 +51,5 @@ class NotionClient:
             if not cursor:
                 break
 
-        return data
+        with open(f"{data_path}/notion_data.json", "w", encoding="utf-8") as file:
+            json.dump(data, file)

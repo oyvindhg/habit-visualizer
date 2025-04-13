@@ -1,9 +1,11 @@
 import json
 import argparse
 from pathlib import Path
+
+import numpy as np
+
+from habit_visualizer.habit_data import HabitData
 from habit_visualizer.heatmap_visualizer import create_heatmap
-from habit_visualizer.habit_data_transformer import HabitDataTransformer
-from habit_visualizer.custom_entry_getters import get_rich_text_time_as_hours, get_from_multiselect
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool for visualizing daily habits from a Notion table in heatmaps")
@@ -12,51 +14,42 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def get_custom_function_map():
-    return {
-        "get_rich_text_time_as_hours": get_rich_text_time_as_hours,
-        "get_from_multiselect": get_from_multiselect
-        }
-
-
 def run():
     args = parse_arguments()
     config_path = args.config
     year = args.year
 
-    custom_function_map = get_custom_function_map()
+    processed_data_path = f"data/processed/{year}"
+    Path(processed_data_path).mkdir(parents=True, exist_ok=True)
 
-    Path(f"data/{year}").mkdir(exist_ok=True)
-    with open(f"data/{year}/habit_data.json", "r", encoding="utf-8") as file:
-        json_data = json.load(file)
-
-    habit_data_transformer = HabitDataTransformer(json_data)
-    
     with open(config_path, 'r', encoding="utf-8") as config_file:
         configs = json.load(config_file)
 
-    Path(f"output/{year}").mkdir(exist_ok=True)
+    output_directory = f"output/{year}"
+
+    Path(output_directory).mkdir(parents=True, exist_ok=True)
     for config in configs:
         property_name = config["property"]
         title = config["title"]
         labels = config["labels"]
         boundaries = config["boundaries"]
         color_style = config["color_style"]
-        custom_function_name = config["custom_function"]
-        if not custom_function_name:
-            custom_entry_getter = None
-        else:
-            custom_entry_getter = custom_function_map[custom_function_name]
-            
-        habit_data = habit_data_transformer.validate_and_transform(
-            property_name=property_name,
+
+        filepath = f"{processed_data_path}/{property_name}.tsv"
+
+        data = np.loadtxt(filepath, delimiter='\t')
+
+        habit_data = HabitData(
             title=title,
-            labels=labels,
+            year=year,
             boundaries=boundaries,
-            custom_entry_getter=custom_entry_getter
+            labels=labels,
+            data=data
         )
 
-        create_heatmap(habit_data, color_style, f"output/{year}/{property_name}.png")
+        output_file = f"{output_directory}/{property_name}.png"
+
+        create_heatmap(habit_data, color_style, output_file)
 
 if __name__ == "__main__":
     run()

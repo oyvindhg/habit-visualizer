@@ -1,5 +1,4 @@
 import os
-import json
 import argparse
 from pathlib import Path
 from dotenv import load_dotenv
@@ -20,19 +19,24 @@ def run():
     website = args.website
     load_dotenv()
 
+    data_path = f"data/raw/{year}"
+    Path(data_path).mkdir(parents=True, exist_ok=True)
+
     match website:
         case 'notion':
             auth_key = os.getenv("NOTION_API_SECRET")
             table_id = os.getenv(f"NOTION_TABLE_{year}_ID")
-            data = NotionClient(auth_key).get_data(table_id)
+            client = NotionClient(auth_key, table_id)
+
         case 'fitbit':
             client_id = os.getenv("FITBIT_CLIENT_ID")
             client_secret = os.getenv("FITBIT_CLIENT_SECRET")
-            data = FitbitClient(client_id=client_id, client_secret=client_secret, token_file="fitbit-tokens.json").get_data()
-    
-    Path(f"data/{year}").mkdir(exist_ok=True)
-    with open(f"data/{year}/{website}_data.json", "w", encoding="utf-8") as file:
-        json.dump(data, file)
+            client = FitbitClient(client_id=client_id, client_secret=client_secret, token_file="fitbit-tokens.json")
+
+        case _:
+            raise ValueError(f"Unsupported website: {website}")
+
+    client.download_data(data_path)
 
 
 if __name__ == "__main__":

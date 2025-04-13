@@ -1,6 +1,7 @@
 [
     {
-        "property": "Mood",
+        "property": "mood",
+        "original": "Mood",
         "title": "Rating my mood",
         "color_style": "RdYlGn",
         "labels": [
@@ -31,49 +32,8 @@
         "custom_function": null
     },
     {
-        "property": "Sleep",
-        "title": "Hours of sleep",
-        "color_style": "RdYlGn",
-        "labels": [
-            "0-5",
-            "5-6",
-            "6-7",
-            "7-8",
-            "8+"
-        ],
-        "boundaries": [
-            0,
-            5,
-            6,
-            7,
-            8,
-            10
-        ],
-        "custom_function": "get_rich_text_time_as_hours"
-    },
-    {
-        "property": "Sleep score",
-        "title": "Fitbit sleep score",
-        "color_style": "RdYlGn",
-        "labels": [
-            "0-59",
-            "60-69",
-            "70-79",
-            "80-89",
-            "90-100"
-        ],
-        "boundaries": [
-            0,
-            60,
-            70,
-            80,
-            90,
-            100
-        ],
-        "custom_function": null
-    },
-    {
-        "property": "Drinks",
+        "property": "drinks",
+        "original": "Drinks",
         "title": "Number of alcolholic drinks",
         "color_style": "YlOrBr",
         "labels": [
@@ -92,7 +52,8 @@
         "custom_function": null
     },
     {
-        "property": "Cooked",
+        "property": "cooked",
+        "original": "Cooked",
         "title": "Did I cook dinner?",
         "color_style": "Oranges",
         "labels": [
@@ -107,7 +68,8 @@
         "custom_function": null
     },
     {
-        "property": "Dating",
+        "property": "dating",
+        "original": "Social-Date",
         "title": "Did I go on a date?",
         "color_style": "PuRd",
         "labels": [
@@ -119,10 +81,11 @@
             0.5,
             1
         ],
-        "custom_function": null
+        "custom_function": "get_from_multiselect"
     },
     {
-        "property": "Friends",
+        "property": "friends",
+        "original": "Social-Friends",
         "title": "Did I meet friends?",
         "color_style": "Greens",
         "labels": [
@@ -134,10 +97,11 @@
             0.5,
             1
         ],
-        "custom_function": null
+        "custom_function": "get_from_multiselect"
     },
     {
-        "property": "Japanese",
+        "property": "japanese",
+        "original": "Japanese",
         "title": "Did I study Japanese?",
         "color_style": "Reds",
         "labels": [
@@ -152,7 +116,8 @@
         "custom_function": null
     },
     {
-        "property": "Programmed",
+        "property": "programmed",
+        "original": "Hobbies-Programmed",
         "title": "Did I program in my free time?",
         "color_style": "Blues",
         "labels": [
@@ -164,11 +129,12 @@
             0.5,
             1
         ],
-        "custom_function": null
+        "custom_function": "get_from_multiselect"
     },
     {
-        "property": "Worked out",
-        "title": "Did I work out?",
+        "property": "gym",
+        "original": "Exercise-Gym",
+        "title": "Did I go to the gym?",
         "color_style": "GnBu",
         "labels": [
             "No",
@@ -179,6 +145,6 @@
             0.5,
             1
         ],
-        "custom_function": null
+        "custom_function": "get_from_multiselect"
     }
 ]
