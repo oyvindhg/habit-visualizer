@@ -2,10 +2,11 @@ import pandas as pd
 import numpy as np
 from datetime import datetime
 from typing import Any
-from habit_visualizer.habit_data import HabitData
+
+from habit_visualizer.transformer import Transformer
 
 
-class HabitDataTransformer:
+class NotionTransformer(Transformer):
     def __init__(self, json_data: dict[str, Any]):
         self.json_data = json_data
         self._validate_json()
@@ -20,10 +21,10 @@ class HabitDataTransformer:
         if self.year != entry_year:
             raise ValueError(f"Year {entry_year} in entry number {entry_number} is not equal to the first recorded year {self.year}")
 
-    def get_entry_default(self, json_entry: dict[str, Any], property_name: str, data_type: str) -> int:
-        return json_entry['properties'][property_name][data_type]
+    def get_entry_default(self, json_entry: dict[str, Any], name: str, data_type: str) -> int:
+        return json_entry['properties'][name][data_type]
 
-    def transform(self, property_name: str, original: str, path: str, custom_entry_getter=None) -> None:
+    def transform(self, original: str, path: str, custom_entry_getter=None) -> None:
         full_year_date_times = pd.date_range(f"{self.year}-01-01", f"{self.year}-12-31")
         data = []
         main_name = original.split('-')[0]

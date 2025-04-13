@@ -5,7 +5,8 @@ from pathlib import Path
 import numpy as np
 
 from habit_visualizer.habit_data import HabitData
-from habit_visualizer.heatmap_visualizer import create_heatmap
+from habit_visualizer.heatmap_visualizer import HeatmapVisualizer
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool for visualizing daily habits from a Notion table in heatmaps")
@@ -26,6 +27,8 @@ def run():
         configs = json.load(config_file)
 
     output_directory = f"output/{year}"
+
+    visualizer = HeatmapVisualizer()
 
     Path(output_directory).mkdir(parents=True, exist_ok=True)
     for config in configs:
@@ -49,7 +52,7 @@ def run():
 
         output_file = f"{output_directory}/{property_name}.png"
 
-        create_heatmap(habit_data, color_style, output_file)
+        visualizer.visualize(habit_data, color_style, output_file)
 
 if __name__ == "__main__":
     run()

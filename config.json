@@ -1,6 +1,7 @@
 [
     {
         "property": "mood",
+        "source": "notion",
         "original": "Mood",
         "title": "Rating my mood",
         "color_style": "RdYlGn",
@@ -33,6 +34,7 @@
     },
     {
         "property": "drinks",
+        "source": "notion",
         "original": "Drinks",
         "title": "Number of alcolholic drinks",
         "color_style": "YlOrBr",
@@ -53,6 +55,7 @@
     },
     {
         "property": "cooked",
+        "source": "notion",
         "original": "Cooked",
         "title": "Did I cook dinner?",
         "color_style": "Oranges",
@@ -69,6 +72,7 @@
     },
     {
         "property": "dating",
+        "source": "notion",
         "original": "Social-Date",
         "title": "Did I go on a date?",
         "color_style": "PuRd",
@@ -85,6 +89,7 @@
     },
     {
         "property": "friends",
+        "source": "notion",
         "original": "Social-Friends",
         "title": "Did I meet friends?",
         "color_style": "Greens",
@@ -101,6 +106,7 @@
     },
     {
         "property": "japanese",
+        "source": "notion",
         "original": "Japanese",
         "title": "Did I study Japanese?",
         "color_style": "Reds",
@@ -117,6 +123,7 @@
     },
     {
         "property": "programmed",
+        "source": "notion",
         "original": "Hobbies-Programmed",
         "title": "Did I program in my free time?",
         "color_style": "Blues",
@@ -133,6 +140,7 @@
     },
     {
         "property": "gym",
+        "source": "notion",
         "original": "Exercise-Gym",
         "title": "Did I go to the gym?",
         "color_style": "GnBu",
@@ -146,5 +154,28 @@
             1
         ],
         "custom_function": "get_from_multiselect"
+    },
+    {
+        "property": "sleep",
+        "source": "fitbit",
+        "original": null,
+        "title": "Hours of sleep",
+        "color_style": "RdYlGn",
+        "labels": [
+            "0-5",
+            "5-6",
+            "6-7",
+            "7-8",
+            "8+"
+        ],
+        "boundaries": [
+            0,
+            5,
+            6,
+            7,
+            8,
+            10
+        ],
+        "custom_function": null
     }
 ]

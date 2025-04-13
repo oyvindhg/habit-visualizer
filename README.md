@@ -50,15 +50,24 @@ FITBIT_CLIENT_SECRET=your_client_secret
 
 ### Download data
 ```
-python downloader.py -y 2025 -w fitbit
+python download.py -y 2025 -s fitbit
 ```
 `-y` specifies the year of the data, defaulting to `2025`
 
-`-w` specifies the website to download data from, defaulting to `notion`. Only `notion` and `fitbit` are valid options.
+`-s` specifies the source to download data from, defaulting to `notion`. Only `notion` and `fitbit` are valid options.
+
+### Transform data
+```
+python transform.py -y 2025 -c configs/all-properties-2025.json
+```
+`-y` specifies the year of the data, defaulting to `2025`
+
+`-c` specifies the path to the config file which specifies the properties to be transformed, defaulting to `config.json`
+
 
 ### Visualize data
 ```
-python visualizer.py -y 2025 -c configs/all-properties-2025.json
+python visualize.py -y 2025 -c configs/all-properties-2025.json
 ```
 `-y` specifies the year of the data, defaulting to `2025`
 

@@ -2,13 +2,16 @@ import json
 from dataclasses import dataclass
 import requests
 
+from habit_visualizer.client import Client
+
+
 @dataclass
 class NotionClientSettings:
     base_url: str = "https://api.notion.com"
     version: str = "2022-06-28"
 
 
-class NotionClient:
+class NotionClient(Client):
     def __init__(self, auth_key: str, table_id: str):
         self.settings = NotionClientSettings
         self.auth_key = auth_key

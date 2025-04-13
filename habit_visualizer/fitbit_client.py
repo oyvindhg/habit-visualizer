@@ -7,6 +7,9 @@ import base64
 
 import requests
 
+from habit_visualizer.client import Client
+
+
 @dataclass
 class FitbitClientSettings:
     redirect_url: str = "https://example.com"
@@ -14,7 +17,7 @@ class FitbitClientSettings:
     token_url: str = "https://api.fitbit.com/oauth2/token"
     scope: str = "activity heartrate location nutrition social weight sleep profile"
 
-class FitbitClient:
+class FitbitClient(Client):
     def __init__(self, client_id: str, client_secret: str, token_file: str):
         self.settings = FitbitClientSettings
         self.client_id = client_id
