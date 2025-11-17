@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import json
 import os
 import time
+from datetime import datetime
 from urllib.parse import urlencode
 import base64
 
@@ -16,6 +17,7 @@ class FitbitClientSettings:
     auth_base_url: str = "https://www.fitbit.com/oauth2/authorize"
     token_url: str = "https://api.fitbit.com/oauth2/token"
     scope: str = "activity heartrate location nutrition social weight sleep profile"
+    base_url: str = "https://api.fitbit.com/1.2/user/-"
 
 class FitbitClient(Client):
     def __init__(self, client_id: str, client_secret: str, token_file: str):
@@ -64,6 +66,7 @@ class FitbitClient(Client):
             json.dump(tokens, file)
     
     def _refresh_tokens(self, refresh_token, token_file: str) -> str:
+        print("Refreshing Fitbit token...")
 
         headers = {
             "Authorization": f"Basic {self.credentials}",
@@ -82,6 +85,7 @@ class FitbitClient(Client):
         tokens = response.json()
 
         self._save_tokens(tokens=tokens, token_file=token_file)
+        print("Token refreshed")
         return tokens["access_token"]
 
     def _load_token(self, token_file: str) -> str:
@@ -90,33 +94,49 @@ class FitbitClient(Client):
             tokens = json.load(file)
         
         if time.time() > file_modified_time + tokens["expires_in"]:
-            print("TOKEN EXPIRED - REFRESH")  # TODO: Test that this works
             return self._refresh_tokens(refresh_token = tokens["refresh_token"], token_file=token_file)
         return tokens["access_token"]
-        
 
-    def download_data(self, data_path: str) -> None:
-
+    def download_data(self, data_path: str, year: int) -> None:
         headers = {
             "Authorization": f"Bearer {self.access_token}"
         }
 
-        for quarter in range(1, 5):
+        # Weight data
+        label = "weight"
+        url = f"{self.settings.base_url}/body/{label}/date/{year}-01-01/{year}-12-31.json"
+        response = requests.get(url, headers=headers, timeout=30)
+        data = response.json()
+        with open(f"{data_path}/fitbit_{label}.json", "w", encoding="utf-8") as file:
+            json.dump(data, file)
 
+        # Step count data
+        label = "steps"
+        url = f"{self.settings.base_url}/activities/{label}/date/{year}-01-01/{year}-12-31.json"
+        response = requests.get(url, headers=headers, timeout=30)
+        data = response.json()
+        with open(f"{data_path}/fitbit_{label}.json", "w", encoding="utf-8") as file:
+            json.dump(data, file)
+
+        # Sleep data
+        label = "sleep"
+        full_year_sleep_data = []
+        for quarter in [1, 2, 3, 4]:
             match quarter:
                 case 1:
-                    dates = "2025-01-01/2025-03-31"
+                    dates = f"{year}-01-01/{year}-03-31"
                 case 2:
-                    dates = "2025-04-01/2025-06-30"
+                    dates = f"{year}-04-01/{year}-06-30"
                 case 3:
-                    dates = "2025-07-01/2025-09-30"
+                    dates = f"{year}-07-01/{year}-09-30"
                 case _:
-                    dates = "2025-10-01/2025-12-31"
-
-            url = f"https://api.fitbit.com/1.2/user/-/sleep/date/{dates}.json"
-
+                    dates = f"{year}-10-01/{year}-12-31"
+            url = f"{self.settings.base_url}/{label}/date/{dates}.json"
             response = requests.get(url, headers=headers, timeout=30)
-            data = response.json()
-
-            with open(f"{data_path}/fitbit_sleep_q{quarter}.json", "w", encoding="utf-8") as file:
-                json.dump(data, file)
+            quarter_sleep_data = response.json()
+            quarter_sleep_entries = quarter_sleep_data.get(f"{label}", [])
+            quarter_sleep_entries.sort(key=lambda x: datetime.fromisoformat(x["dateOfSleep"]))
+            full_year_sleep_data.extend(quarter_sleep_entries)
+        fitbit_sleep_data = {f"{label}": full_year_sleep_data}
+        with open(f"{data_path}/fitbit_{label}.json", "w", encoding="utf-8") as file:
+            json.dump(fitbit_sleep_data, file)

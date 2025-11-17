@@ -17,7 +17,7 @@ class NotionClient(Client):
         self.auth_key = auth_key
         self.table_id = table_id
 
-    def download_data(self, data_path: str) -> None:
+    def download_data(self, data_path: str, year: int) -> None:
         path = "/v1/databases/" + self.table_id + "/query"
         url = self.settings.base_url + path
 

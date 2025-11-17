@@ -158,7 +158,7 @@
     {
         "property": "sleep",
         "source": "fitbit",
-        "original": null,
+        "original": "sleep",
         "title": "Hours of sleep",
         "color_style": "RdYlGn",
         "labels": [
@@ -175,6 +175,39 @@
             7,
             8,
             10
+        ],
+        "custom_function": null
+    },
+    {
+        "property": "steps",
+        "source": "fitbit",
+        "original": "activities-steps",
+        "title": "Steps walked (thousands)",
+        "color_style": "RdYlGn",
+        "labels": [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10"
+        ],
+        "boundaries": [
+            0,
+            1000,
+            2000,
+            3000,
+            4000,
+            5000,
+            6000,
+            7000,
+            8000,
+            9000,
+            10000
         ],
         "custom_function": null
     }

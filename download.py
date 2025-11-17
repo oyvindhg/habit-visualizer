@@ -9,7 +9,7 @@ from habit_visualizer.notion_client import NotionClient
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool to download habit tracker data")
     parser.add_argument('-y', '--year', type=int, default=2025, help="Year to visualize")
-    parser.add_argument('-s', '--source', choices=['notion', 'fitbit'], default='notion', help="Which website to download from")
+    parser.add_argument('-w', '--website', choices=['notion', 'fitbit'], default='notion', help="Which website to download from")
     return parser.parse_args()
 
 
@@ -36,7 +36,7 @@ def run():
         case _:
             raise ValueError(f"Unsupported website: {website}")
 
-    client.download_data(data_path)
+    client.download_data(data_path, year)
 
 
 if __name__ == "__main__":
