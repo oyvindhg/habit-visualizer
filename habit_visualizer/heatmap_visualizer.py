@@ -11,13 +11,12 @@ class HeatmapVisualizer:
         missing_color = "gray"
         fontname = "DejaVu Sans"
 
-        dates = pd.date_range(f"{habit_data.year}-01-01", f"{habit_data.year}-12-31")
-        df = pd.DataFrame({"date": dates, "value": habit_data.data})
+        df = habit_data.data
 
-        df["day_of_week"] = df["date"].dt.dayofweek
+        df["day_of_week"] = df.index.dayofweek
 
         # Some days can be counted in 'week 1' of the next year, so we change those to week 53 of the current year
-        df["week"] = df["date"].apply(lambda x: x.isocalendar().week if x.month != 12 or x.isocalendar().week != 1 else 53)
+        df["week"] = df.index.map(lambda x: x.isocalendar().week if x.month != 12 or x.isocalendar().week != 1 else 53)
 
         scaler = 0.5
         fig = plt.figure(figsize=(7 * scaler, 30 * scaler))
@@ -28,16 +27,16 @@ class HeatmapVisualizer:
         ax.text(0.5, 1.05, f"{habit_data.title.upper()}", transform=ax.transAxes, fontsize=12, fontname=fontname, color=title_color, weight='bold', ha='center')
 
         # Draw separation lines between months
-        month_end_dates = df[df["date"].dt.is_month_end]
+        month_end_dates = df[df.index.is_month_end]
         linewidth = 5
         for i, (_, row) in enumerate(month_end_dates.iterrows()):
             if i < len(month_end_dates) - 1:
                 week = row["week"]
                 day_of_week = row["day_of_week"]
-                plt.plot([-0.5, day_of_week + 0.5], [week - 0.5, week - 0.5], color=background_color, linewidth=linewidth)
-                plt.plot([day_of_week + 0.5, 6.5], [week - 1.5, week - 1.5], color=background_color, linewidth=linewidth)
+                plt.plot([-0.5, day_of_week + 0.5], [week - 0.5, week - 0.5], color=background_color, linewidth=linewidth, clip_on=False)
                 if day_of_week < 6:
                     plt.plot([day_of_week + 0.5, day_of_week + 0.5], [week - 1.5, week - 0.5], color=background_color, linewidth=linewidth)
+                    plt.plot([day_of_week + 0.5, 6.5], [week - 1.5, week - 1.5], color=background_color, linewidth=linewidth, clip_on=False)
 
         # Remove border around the plot
         plt.gca().spines["top"].set_visible(False)
@@ -48,9 +47,9 @@ class HeatmapVisualizer:
         # Configure axis ticks
         plt.xticks(range(7), ["M", "T", "W", "T", "F", "S", "S"], fontname=fontname, color=label_color, weight='bold')
         plt.gca().xaxis.tick_top()
-        month_starts = df[df["date"].dt.is_month_start]
-        month_weeks = month_starts.groupby(month_starts["date"].dt.month).apply(
-            lambda x: x["week"].iloc[0] + (1 if x["date"].dt.weekday.iloc[0] != 0 else 0)
+        month_starts = df[df.index.is_month_start]
+        month_weeks = month_starts.groupby(month_starts.index.month).apply(
+            lambda x: x["week"].iloc[0] + (1 if x.index[0].weekday != 0 else 0)
         )
         plt.yticks(month_weeks, ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"], fontname=fontname, color=label_color, weight='bold')
         plt.tick_params(axis='both', which='both', length=0)
@@ -68,6 +67,7 @@ class HeatmapVisualizer:
         )
 
         plot_data = pd.DataFrame(weekly_data.tolist())
+        plot_data = plot_data.astype(float)
 
         # Define heatmap colors and color labels
         boundaries = habit_data.boundaries

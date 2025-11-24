@@ -1,6 +1,5 @@
 import json
 import argparse
-from datetime import datetime
 from pathlib import Path
 
 from habit_visualizer.fitbit_transformer import FitbitTransformer

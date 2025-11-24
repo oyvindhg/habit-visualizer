@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from datetime import datetime, date
 from typing import Any
 
@@ -24,14 +23,14 @@ class FitbitTransformer(Transformer):
         return float(json_entry['value'])
 
     def transform(self, original: str, path: str, custom_entry_getter=None) -> None:
-        full_year_date_times = pd.date_range(f"{self.year}-01-01", f"{self.year}-12-31")
-        data = []
+        dates = pd.date_range(f"{self.year}-01-01", f"{self.year}-12-31")
+        values = []
         entries = self.json_data[original]
         date_label = 'dateTime'
         if original == 'sleep':
             date_label = 'dateOfSleep'
         entry_number = 0
-        for date_time in full_year_date_times:
+        for date_time in dates:
             current_date = date_time.date()
 
             if entry_number < len(entries):
@@ -43,20 +42,19 @@ class FitbitTransformer(Transformer):
                         while entry_number < len(entries) and current_date == datetime.strptime(entries[entry_number]['dateOfSleep'],'%Y-%m-%d').date():
                             sleep_hours += entries[entry_number]['minutesAsleep'] / 60
                             entry_number += 1
-                        data_entry = sleep_hours
+                        value = sleep_hours
                     else:
                         entry_getter = custom_entry_getter or self.get_entry_default
-                        data_entry = entry_getter(entries[entry_number])
+                        value = entry_getter(entries[entry_number])
                         entry_number += 1
-                    if data_entry > 0:
-                        data.append(data_entry)
+                    if value > 0:
+                        values.append(value)
                     else:
-                        data.append(None)
+                        values.append(None)
                 else:
-                    data.append(None)
+                    values.append(None)
             else:
-                data.append(None)
+                values.append(None)
 
-        np_data = np.array([np.nan if num is None else num for num in data], dtype='float')
-
-        np.savetxt(path, np_data, delimiter="\t")
+        df = pd.DataFrame({"date": dates, "value": values})
+        df.to_csv(path, sep='\t', index=False)

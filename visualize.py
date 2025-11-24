@@ -2,7 +2,7 @@ import json
 import argparse
 from pathlib import Path
 
-import numpy as np
+import pandas as pd
 
 from habit_visualizer.habit_data import HabitData
 from habit_visualizer.heatmap_visualizer import HeatmapVisualizer
@@ -40,7 +40,8 @@ def run():
 
         filepath = f"{processed_data_path}/{property_name}.tsv"
 
-        data = np.loadtxt(filepath, delimiter='\t')
+        data = pd.read_csv(filepath, sep='\t', parse_dates=["date"])
+        data.set_index("date", inplace=True)
 
         habit_data = HabitData(
             title=title,
@@ -50,7 +51,7 @@ def run():
             data=data
         )
 
-        output_file = f"{output_directory}/{property_name}.png"
+        output_file = f"{output_directory}/{property_name}_heatmap.png"
 
         visualizer.visualize(habit_data, color_style, output_file)
 
