@@ -1,49 +1,32 @@
-import pandas as pd
-from datetime import datetime, date
+from datetime import datetime
 from typing import Any
 
 from habit_visualizer.transformer import Transformer
 
 
 class NotionTransformer(Transformer):
-    def __init__(self, json_data: dict[str, Any], year: int):
-        self.json_data = json_data
-        self._validate_json()
-        self.year = year
+    def get_entry_default(self, json_entry: dict[str, Any], name: str, data_type: str) -> float | None:
+        entry_value = json_entry['properties'][name][data_type]
+        return float(entry_value) if entry_value is not None else None
 
-    def _validate_json(self):
-        if len(self.json_data) == 0:
-            raise ValueError("Habit data is empty")
-        
-    def _validate_year(self, entry_number: int, entry_date: date):
-        if self.year != entry_date.year:
-            raise ValueError(
-                f"Year {entry_date.year} in entry number {entry_number} is not equal to the set year {self.year}")
-
-    def get_entry_default(self, json_entry: dict[str, Any], name: str, data_type: str) -> int:
-        return json_entry['properties'][name][data_type]
-
-    def transform(self, original: str, path: str, custom_entry_getter=None) -> None:
-        dates = pd.date_range(f"{self.year}-01-01", f"{self.year}-12-31")
+    def _calculate_values(self, original: str, custom_entry_getter=None) -> list[float | None]:
         values = []
+        entries = self.json_data
         main_name = original.split('-')[0]
         data_type = self.json_data[0]['properties'][main_name]['type']
         entry_number = 0
-        for date_time in dates:
+        for date_time in self.dates:
             current_date = date_time.date()
+            value = None
 
-            if entry_number < len(self.json_data):
-                entry_date = datetime.strptime(self.json_data[entry_number]['properties']['Date']['date']['start'], '%Y-%m-%d').date()
+            if entry_number < len(entries):
+                entry_date = datetime.strptime(entries[entry_number]['properties']['Date']['date']['start'], '%Y-%m-%d').date()
                 self._validate_year(entry_number, entry_date)
                 if current_date == entry_date:
                     entry_getter = custom_entry_getter or self.get_entry_default
-                    value = entry_getter(self.json_data[entry_number], original, data_type)
-                    values.append(value)
+                    value = entry_getter(entries[entry_number], original, data_type)
                     entry_number += 1
-                else:
-                    values.append(None)
-            else:
-                values.append(None)
 
-        df = pd.DataFrame({"date": dates, "value": values})
-        df.to_csv(path, sep='\t', index=False)
+            values.append(value)
+
+        return values
