@@ -35,6 +35,7 @@ def run():
 
     processed_data_path = f"data/processed/{year}"
     Path(processed_data_path).mkdir(parents=True, exist_ok=True)
+    notion_transformer = None
     for config in configs:
         property_name = config["property"]
         source = config["source"]
@@ -47,9 +48,11 @@ def run():
 
         match source:
             case "notion":
-                with open(f"{raw_data_path}/notion_data.json", "r", encoding="utf-8") as file:
-                    notion_data = json.load(file)
-                    transformer = NotionTransformer(notion_data, year)
+                if notion_transformer is None:
+                    with open(f"{raw_data_path}/notion_data.json", "r", encoding="utf-8") as file:
+                        notion_data = json.load(file)
+                        notion_transformer = NotionTransformer(notion_data, year)
+                transformer = notion_transformer
             case "fitbit":
                 with open(f"{raw_data_path}/fitbit_{property_name}.json", "r", encoding="utf-8") as file:
                     fitbit_data = json.load(file)
