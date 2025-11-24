@@ -6,13 +6,18 @@ from habit_visualizer.visualizer import Visualizer
 
 
 class HeatmapVisualizer(Visualizer):
-    def visualize(self, habit_data: HabitData, color_style: str, output_path: str):
-        df = habit_data.data
+    def _add_week_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.copy()
 
         df["day_of_week"] = df.index.dayofweek
 
         # Some days can be counted in 'week 1' of the next year, so we change those to week 53 of the current year
         df["week"] = df.index.map(lambda x: x.isocalendar().week if x.month != 12 or x.isocalendar().week != 1 else 53)
+
+        return df
+
+    def _draw(self, habit_data: HabitData, color_style: str) -> None:
+        df = self._add_week_columns(habit_data.data)
 
         scaler = 0.5
         fig = plt.figure(figsize=(7 * scaler, 30 * scaler))
@@ -78,5 +83,3 @@ class HeatmapVisualizer(Visualizer):
         colorbar.ax.set_xticklabels(habit_data.labels, fontname=self.fontname, color=self.label_color)
         colorbar.ax.tick_params(axis='both', which='both', length=0)
         colorbar.outline.set_visible(False)
-
-        plt.savefig(output_path)
