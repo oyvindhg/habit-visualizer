@@ -4,8 +4,9 @@ A visualization tool for Fitbit data and habit tracking in Notion
 
 
 ## Requirements
-- Python (built with 3.10)
+- Python `3.13`
 - Notion account with a database tracking daily habits
+- Fitbit account
 
 ## Setup
 
@@ -50,11 +51,11 @@ FITBIT_CLIENT_SECRET=your_client_secret
 
 ### Download data
 ```
-python download.py -y 2025 -s fitbit
+python download.py -y 2025 -w fitbit
 ```
 `-y` specifies the year of the data, defaulting to `2025`
 
-`-s` specifies the source to download data from, defaulting to `notion`. Only `notion` and `fitbit` are valid options.
+`-w` specifies the website to download data from, defaulting to `notion`. Only `notion` and `fitbit` are valid options.
 
 ### Transform data
 ```

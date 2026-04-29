@@ -1,10 +1,12 @@
 import json
 import argparse
+import os
 from pathlib import Path
-
+from dotenv import load_dotenv
 from habit_visualizer.fitbit_transformer import FitbitTransformer
 from habit_visualizer.notion_transformer import NotionTransformer
 from habit_visualizer.custom_entry_getters import get_rich_text_time_as_hours, get_from_multiselect
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool for transforming raw json data to tsv")
@@ -17,23 +19,25 @@ def get_custom_function_map():
     return {
         "get_rich_text_time_as_hours": get_rich_text_time_as_hours,
         "get_from_multiselect": get_from_multiselect
-        }
+    }
 
 
 def run():
     args = parse_arguments()
     config_path = args.config
     year = args.year
+    load_dotenv()
 
     custom_function_map = get_custom_function_map()
 
-    raw_data_path = f"data/raw/{year}"
+    data_dir = Path(os.getenv("DATA_DIR")).expanduser()
+    raw_data_path = str(data_dir / f"raw/{year}")
     Path(raw_data_path).mkdir(parents=True, exist_ok=True)
-    
+
     with open(config_path, 'r', encoding="utf-8") as config_file:
         configs = json.load(config_file)
 
-    processed_data_path = f"data/processed/{year}"
+    processed_data_path = str(data_dir / f"processed/{year}")
     Path(processed_data_path).mkdir(parents=True, exist_ok=True)
     notion_transformer = None
     for config in configs:
@@ -57,7 +61,8 @@ def run():
                 with open(f"{raw_data_path}/fitbit_{property_name}.json", "r", encoding="utf-8") as file:
                     fitbit_data = json.load(file)
                     transformer = FitbitTransformer(fitbit_data, year)
-            case _: raise ValueError(f"{source} is not a valid source")
+            case _:
+                raise ValueError(f"{source} is not a valid source")
 
         file_path = f"{processed_data_path}/{property_name}.tsv"
 
@@ -66,6 +71,7 @@ def run():
             path=file_path,
             custom_entry_getter=custom_entry_getter
         )
+
 
 if __name__ == "__main__":
     run()

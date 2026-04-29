@@ -3,11 +3,3 @@
 .vscode/
 __pycache__/
 .env
-
-# Directories
-/data/
-/output/
-/configs/
-
-# Fitbit token file
-fitbit-tokens.json

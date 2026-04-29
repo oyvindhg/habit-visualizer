@@ -1,8 +1,9 @@
 import json
 import argparse
+import os
 from pathlib import Path
-
 import pandas as pd
+from dotenv import load_dotenv
 
 from habit_visualizer.habit_data import HabitData
 from habit_visualizer.heatmap_visualizer import HeatmapVisualizer
@@ -19,14 +20,16 @@ def run():
     args = parse_arguments()
     config_path = args.config
     year = args.year
+    load_dotenv()
 
-    processed_data_path = f"data/processed/{year}"
+    data_dir = Path(os.getenv("DATA_DIR")).expanduser()
+    processed_data_path = str(data_dir / f"processed/{year}")
     Path(processed_data_path).mkdir(parents=True, exist_ok=True)
 
     with open(config_path, 'r', encoding="utf-8") as config_file:
         configs = json.load(config_file)
 
-    output_directory = f"output/{year}"
+    output_directory = str(data_dir / f"output/{year}")
 
     visualizer = HeatmapVisualizer()
 
@@ -54,6 +57,7 @@ def run():
         output_file = f"{output_directory}/{property_name}_heatmap.png"
 
         visualizer.visualize(habit_data, color_style, output_file)
+
 
 if __name__ == "__main__":
     run()

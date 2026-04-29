@@ -9,7 +9,8 @@ from habit_visualizer.notion_client import NotionClient
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool to download habit tracker data")
     parser.add_argument('-y', '--year', type=int, default=2025, help="Year to visualize")
-    parser.add_argument('-w', '--website', choices=['notion', 'fitbit'], default='notion', help="Which website to download from")
+    parser.add_argument('-w', '--website', choices=['notion', 'fitbit'], default='notion',
+                        help="Which website to download from")
     return parser.parse_args()
 
 
@@ -19,8 +20,9 @@ def run():
     website = args.website
     load_dotenv()
 
-    data_path = f"data/raw/{year}"
-    Path(data_path).mkdir(parents=True, exist_ok=True)
+    data_dir = Path(os.getenv("DATA_DIR")).expanduser()
+    raw_data_path = str(data_dir / f"raw/{year}")
+    Path(raw_data_path).mkdir(parents=True, exist_ok=True)
 
     match website:
         case 'notion':
@@ -31,12 +33,13 @@ def run():
         case 'fitbit':
             client_id = os.getenv("FITBIT_CLIENT_ID")
             client_secret = os.getenv("FITBIT_CLIENT_SECRET")
-            client = FitbitClient(client_id=client_id, client_secret=client_secret, token_file="fitbit-tokens.json")
+            token_file = str(Path(os.getenv("FITBIT_TOKEN_PATH")).expanduser())
+            client = FitbitClient(client_id=client_id, client_secret=client_secret, token_file=token_file)
 
         case _:
             raise ValueError(f"Unsupported website: {website}")
 
-    client.download_data(data_path, year)
+    client.download_data(raw_data_path, year)
 
 
 if __name__ == "__main__":
