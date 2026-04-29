@@ -1,8 +1,6 @@
 [
     {
         "property": "mood",
-        "source": "notion",
-        "original": "Mood",
         "title": "Rating my mood",
         "color_style": "RdYlGn",
         "labels": [
@@ -29,13 +27,10 @@
             8.5,
             9.5,
             10
-        ],
-        "custom_function": null
+        ]
     },
     {
         "property": "drinks",
-        "source": "notion",
-        "original": "Drinks",
         "title": "Number of alcolholic drinks",
         "color_style": "YlOrBr",
         "labels": [
@@ -50,13 +45,10 @@
             2.5,
             5.5,
             6
-        ],
-        "custom_function": null
+        ]
     },
     {
         "property": "cooked",
-        "source": "notion",
-        "original": "Cooked",
         "title": "Did I cook dinner?",
         "color_style": "Oranges",
         "labels": [
@@ -67,13 +59,10 @@
             0,
             0.5,
             1
-        ],
-        "custom_function": null
+        ]
     },
     {
         "property": "dating",
-        "source": "notion",
-        "original": "Social-Date",
         "title": "Did I go on a date?",
         "color_style": "PuRd",
         "labels": [
@@ -84,13 +73,10 @@
             0,
             0.5,
             1
-        ],
-        "custom_function": "get_from_multiselect"
+        ]
     },
     {
         "property": "friends",
-        "source": "notion",
-        "original": "Social-Friends",
         "title": "Did I meet friends?",
         "color_style": "Greens",
         "labels": [
@@ -101,13 +87,10 @@
             0,
             0.5,
             1
-        ],
-        "custom_function": "get_from_multiselect"
+        ]
     },
     {
         "property": "japanese",
-        "source": "notion",
-        "original": "Japanese",
         "title": "Did I study Japanese?",
         "color_style": "Reds",
         "labels": [
@@ -118,13 +101,10 @@
             0,
             0.5,
             1
-        ],
-        "custom_function": null
+        ]
     },
     {
         "property": "programmed",
-        "source": "notion",
-        "original": "Hobbies-Programmed",
         "title": "Did I program in my free time?",
         "color_style": "Blues",
         "labels": [
@@ -135,13 +115,10 @@
             0,
             0.5,
             1
-        ],
-        "custom_function": "get_from_multiselect"
+        ]
     },
     {
         "property": "gym",
-        "source": "notion",
-        "original": "Exercise-Gym",
         "title": "Did I go to the gym?",
         "color_style": "GnBu",
         "labels": [
@@ -152,13 +129,10 @@
             0,
             0.5,
             1
-        ],
-        "custom_function": "get_from_multiselect"
+        ]
     },
     {
         "property": "sleep",
-        "source": "fitbit",
-        "original": "sleep",
         "title": "Hours of sleep",
         "color_style": "RdYlGn",
         "labels": [
@@ -175,13 +149,10 @@
             7,
             8,
             10
-        ],
-        "custom_function": null
+        ]
     },
     {
         "property": "steps",
-        "source": "fitbit",
-        "original": "activities-steps",
         "title": "Steps walked (thousands)",
         "color_style": "RdYlGn",
         "labels": [
@@ -208,7 +179,6 @@
             8000,
             9000,
             10000
-        ],
-        "custom_function": null
+        ]
     }
 ]

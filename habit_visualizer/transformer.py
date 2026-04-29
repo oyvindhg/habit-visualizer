@@ -21,10 +21,9 @@ class Transformer(ABC):
         if len(self.json_data) == 0:
             raise ValueError("Habit data is empty")
 
-    def transform(self, original: str, path: str, custom_entry_getter=None) -> None:
+    def to_series(self, original: str, custom_entry_getter) -> pd.Series:
         values = self._calculate_values(original, custom_entry_getter)
-        df = pd.DataFrame({"date": self.dates, "value": values})
-        df.to_csv(path, sep="\t", index=False)
+        return pd.Series(values, index=self.dates)
 
     @abstractmethod
     def _calculate_values(self, original: str, custom_entry_getter=None) -> list[float | None]:

@@ -1,0 +1,62 @@
+[
+    {
+        "property": "mood",
+        "source": "notion",
+        "original": "Mood",
+        "custom_function": null
+    },
+    {
+        "property": "drinks",
+        "source": "notion",
+        "original": "Drinks",
+        "custom_function": null
+    },
+    {
+        "property": "cooked",
+        "source": "notion",
+        "original": "Cooked",
+        "custom_function": null
+    },
+    {
+        "property": "dating",
+        "source": "notion",
+        "original": "Social-Date",
+        "custom_function": "get_from_multiselect"
+    },
+    {
+        "property": "friends",
+        "source": "notion",
+        "original": "Social-Friends",
+        "custom_function": "get_from_multiselect"
+    },
+    {
+        "property": "japanese",
+        "source": "notion",
+        "original": "Japanese",
+        "custom_function": null
+    },
+    {
+        "property": "programmed",
+        "source": "notion",
+        "original": "Hobbies-Programmed",
+        "custom_function": "get_from_multiselect"
+    },
+    {
+        "property": "gym",
+        "source": "notion",
+        "original": "Exercise-Gym",
+        "custom_function": "get_from_multiselect"
+    },
+    {
+        "property": "sleep",
+        "source": "fitbit",
+        "original": "sleep",
+        "custom_function": null
+    },
+    {
+        "property": "steps",
+        "source": "fitbit",
+        "original": "activities-steps",
+        "custom_function": null
+    }
+]
