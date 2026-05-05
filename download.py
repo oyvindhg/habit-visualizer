@@ -3,9 +3,9 @@ import argparse
 from pathlib import Path
 from dotenv import load_dotenv
 
-from habit_visualizer.client import Client
-from habit_visualizer.fitbit_client import FitbitClient
-from habit_visualizer.notion_client import NotionClient
+from sources.client import Client
+from sources.fitbit_client import FitbitClient
+from sources.notion_client import NotionClient
 
 
 def parse_arguments():

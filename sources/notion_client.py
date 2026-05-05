@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass
 import requests
 
-from habit_visualizer.client import Client
+from sources.client import Client
 
 
 @dataclass

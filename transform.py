@@ -5,10 +5,10 @@ from pathlib import Path
 
 import pandas as pd
 from dotenv import load_dotenv
-from habit_visualizer.fitbit_transformer import FitbitTransformer
-from habit_visualizer.notion_transformer import NotionTransformer
-from habit_visualizer.transformer import Transformer
-from habit_visualizer.custom_entry_getters import get_rich_text_time_as_hours, get_from_multiselect
+from sources.fitbit_transformer import FitbitTransformer
+from sources.notion_transformer import NotionTransformer
+from sources.transformer import Transformer
+from sources.custom_entry_getters import get_rich_text_time_as_hours, get_from_multiselect
 
 
 def parse_arguments():

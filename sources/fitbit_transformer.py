@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any
 
-from habit_visualizer.transformer import Transformer
+from sources.transformer import Transformer
 
 
 class FitbitTransformer(Transformer):
