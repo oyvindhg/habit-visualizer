@@ -59,23 +59,14 @@ python download.py -y 2025 -w fitbit
 
 ### Transform data
 ```
-python transform.py -y 2025 -c configs/all-properties-2025.json
+python transform.py -y 2025 -c configs/my-source-config.json
 ```
 `-y` specifies the year of the data, defaulting to `2025`
 
-`-c` specifies the path to the config file which specifies the properties to be transformed, defaulting to `config.json`
+`-c` specifies the path to the config file which specifies the properties to be transformed, defaulting to `sources.json`
 
 
 ### Visualize data
 ```
-python visualize.py -y 2025 -c configs/all-properties-2025.json
+streamlit run visualize.py
 ```
-`-y` specifies the year of the data, defaulting to `2025`
-
-`-c` specifies the path to the config file which specifies the properties to be visualized, defaulting to `config.json`
-
-#### Example
-
-Running the visualizing tool will produce a heatmap of all habits as specified in the config file. The following example is showing a daily overview of whether I studied Japanese or not in 2024.
-
-<img src="https://github.com/user-attachments/assets/b291f9dc-f6fb-4848-8c6e-9ef3a3cf047f" alt="Japanese study habit" width="100" />
