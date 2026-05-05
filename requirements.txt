@@ -1,5 +1,6 @@
 requests~=2.33.1
 python-dotenv~=1.2.2
-matplotlib~=3.10.9
 fitbit~=0.3.1
 pandas~=3.0.2
+streamlit~=1.40
+plotly~=6.7.0
