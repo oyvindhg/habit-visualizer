@@ -7,6 +7,7 @@ import streamlit as st
 from dotenv import load_dotenv
 
 from charts.heatmap import HeatmapChart
+from charts.time_series import TimeSeriesChart
 
 
 @st.cache_data
@@ -29,7 +30,19 @@ def run() -> None:
     display_config = load_display_config()
 
     st.title("Habit Visualizer")
-    HeatmapChart().render(habits, display_config)
+
+    heatmap_tab, timeseries_tab = st.tabs(
+        [
+            "Heatmap",
+            "Time series"
+        ]
+    )
+
+    with heatmap_tab:
+        HeatmapChart().render(habits, display_config)
+
+    with timeseries_tab:
+        TimeSeriesChart().render(habits, display_config)
 
 
 if __name__ == "__main__":

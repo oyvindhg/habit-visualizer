@@ -176,10 +176,10 @@ class HeatmapChart(Chart):
         with controls:
             years = sorted(habits.index.year.unique())
             year = st.selectbox("Year", years, index=len(years) - 1)
-            configurable = [h for h in habits.columns if h in display_config]
+            selectable = [h for h in habits.columns if h in display_config]
             habit = st.selectbox(
                 "Habit",
-                configurable,
+                selectable,
                 format_func=lambda h: display_config[h]["title"],
             )
 
