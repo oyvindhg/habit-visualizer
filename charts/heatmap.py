@@ -87,7 +87,7 @@ def _create_month_separators(df: pd.DataFrame, color: str) -> list[dict]:
     return shapes
 
 
-def _create_figure(values: pd.Series, year: int, config: dict) -> go.Figure:
+def _create_figure(values: pd.Series, year: int, display_config: dict) -> go.Figure:
     all_dates = pd.date_range(f"{year}-01-01", f"{year}-12-31")
     df = pd.DataFrame(index=all_dates)
     df["value"] = values.reindex(all_dates)
@@ -98,12 +98,12 @@ def _create_figure(values: pd.Series, year: int, config: dict) -> go.Figure:
     grid = df.pivot_table(index="day_of_week", columns="week", values="value", aggfunc="first")
     date_grid = df.pivot_table(index="day_of_week", columns="week", values="date_str", aggfunc="first")
 
-    boundaries = config["boundaries"]
-    labels = config["labels"]
-    colorscale = _get_colorscale(config["color_style"], boundaries)
+    boundaries = display_config["boundaries"]
+    labels = display_config["labels"]
+    colorscale = _get_colorscale(display_config["color_style"], boundaries)
     color_ticks = [(boundaries[i] + boundaries[i + 1]) / 2 for i in range(len(boundaries) - 1)]
 
-    hover_template = "%{customdata}<br>Value: %{z}<extra></extra>"  # <extra></extra> removes trace from hover text
+    hover_template = "%{customdata}<br>Value: %{z}<extra></extra>"
 
     fig = go.Figure(
         data=go.Heatmap(
@@ -138,7 +138,7 @@ def _create_figure(values: pd.Series, year: int, config: dict) -> go.Figure:
 
     fig.update_layout(
         title=dict(
-            text=config["title"],
+            text=display_config["title"],
             x=0.5,
             xanchor="center",
             y=0.95
@@ -176,7 +176,7 @@ class HeatmapChart(Chart):
         with controls:
             years = sorted(habits.index.year.unique())
             year = st.selectbox("Year", years, index=len(years) - 1)
-            selectable = [h for h in habits.columns if h in display_config]
+            selectable = self._selectable(habits, display_config)
             habit = st.selectbox(
                 "Habit",
                 selectable,

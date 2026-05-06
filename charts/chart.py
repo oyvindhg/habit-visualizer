@@ -14,6 +14,9 @@ class Chart(ABC):
 
         self._plot(habits, display_config)
 
+    def _selectable(self, habits: pd.DataFrame, display_config: dict) -> list[str]:
+        return [h for h in habits.columns if h in display_config]
+
     @abstractmethod
     def _plot(self, habits: pd.DataFrame, display_config: dict) -> None:
         pass

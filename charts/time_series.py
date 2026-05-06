@@ -6,9 +6,9 @@ from plotly.subplots import make_subplots
 from charts.chart import Chart
 
 
-def _create_figure(data: pd.DataFrame, config: dict) -> go.Figure:
+def _create_figure(data: pd.DataFrame, display_config: dict) -> go.Figure:
     n = len(data.columns)
-    titles = [config[habit]["title"] for habit in data.columns]
+    titles = [display_config[habit]["title"] for habit in data.columns]
 
     fig = make_subplots(
         rows=n,
@@ -42,7 +42,7 @@ def _create_figure(data: pd.DataFrame, config: dict) -> go.Figure:
 
 
 class TimeSeriesChart(Chart):
-    def _plot(self, habits: pd.DataFrame, config: dict) -> None:
+    def _plot(self, habits: pd.DataFrame, display_config: dict) -> None:
         controls, chart = st.columns([1, 4])
         with controls:
             min_date = habits.index.min().date()
@@ -53,7 +53,7 @@ class TimeSeriesChart(Chart):
                 min_value=min_date,
                 max_value=max_date,
             )
-            selectable = [h for h in habits.columns if h in config]
+            selectable = self._selectable(habits, display_config)
             selected = st.multiselect(
                 "Habits",
                 options=selectable,
@@ -87,4 +87,4 @@ class TimeSeriesChart(Chart):
                 case "Monthly sum":
                     window = window.resample("MS").sum()
 
-            st.plotly_chart(_create_figure(window, config), width="stretch")
+            st.plotly_chart(_create_figure(window, display_config), width="stretch")

@@ -2,6 +2,7 @@
     {
         "property": "mood",
         "title": "Rating my mood",
+        "default_y": true,
         "color_style": "RdYlGn",
         "labels": [
             "1",

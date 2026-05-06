@@ -6,7 +6,9 @@ import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 
+from charts.correlations import CorrelationMatrixChart
 from charts.heatmap import HeatmapChart
+from charts.pair_scatter import PairScatterChart
 from charts.time_series import TimeSeriesChart
 
 
@@ -31,10 +33,11 @@ def run() -> None:
 
     st.title("Habit Visualizer")
 
-    heatmap_tab, timeseries_tab = st.tabs(
+    heatmap_tab, timeseries_tab, correlations_tab = st.tabs(
         [
             "Heatmap",
-            "Time series"
+            "Time series",
+            "Correlations"
         ]
     )
 
@@ -43,6 +46,10 @@ def run() -> None:
 
     with timeseries_tab:
         TimeSeriesChart().render(habits, display_config)
+
+    with correlations_tab:
+        CorrelationMatrixChart("Correlation Matrix").render(habits, display_config)
+        PairScatterChart("Pair Scatter").render(habits, display_config)
 
 
 if __name__ == "__main__":
