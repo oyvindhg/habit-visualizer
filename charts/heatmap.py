@@ -177,13 +177,13 @@ class HeatmapChart(Chart):
             years = sorted(habits.index.year.unique())
             year = st.selectbox("Year", years, index=len(years) - 1)
             selectable = self._selectable(habits, display_config)
-            habit = st.selectbox(
+            selected_habit = st.selectbox(
                 "Habit",
                 selectable,
-                format_func=lambda h: display_config[h]["title"],
+                format_func=lambda habit: display_config[habit]["title"],
             )
 
         with chart:
-            config = display_config[habit]
-            values = habits[habits.index.year == year][habit]
+            config = display_config[selected_habit]
+            values = habits[habits.index.year == year][selected_habit]
             st.plotly_chart(_create_figure(values, year, config), width="content")

@@ -6,10 +6,12 @@ import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
 
+from charts.conditional import ConditionalComparisonChart
 from charts.correlations import CorrelationMatrixChart
 from charts.heatmap import HeatmapChart
 from charts.pair_scatter import PairScatterChart
 from charts.time_series import TimeSeriesChart
+from charts.weekday import DayOfWeekChart
 
 
 @st.cache_data
@@ -32,12 +34,12 @@ def run() -> None:
     display_config = load_display_config()
 
     st.title("Habit Visualizer")
-
-    heatmap_tab, timeseries_tab, correlations_tab = st.tabs(
+    heatmap_tab, timeseries_tab, correlations_tab, patterns_tab = st.tabs(
         [
             "Heatmap",
             "Time series",
-            "Correlations"
+            "Correlations",
+            "Patterns"
         ]
     )
 
@@ -50,6 +52,10 @@ def run() -> None:
     with correlations_tab:
         CorrelationMatrixChart("Correlation Matrix").render(habits, display_config)
         PairScatterChart("Pair Scatter").render(habits, display_config)
+
+    with patterns_tab:
+        DayOfWeekChart("Day of Week").render(habits, display_config)
+        ConditionalComparisonChart("Conditional Comparison").render(habits, display_config)
 
 
 if __name__ == "__main__":

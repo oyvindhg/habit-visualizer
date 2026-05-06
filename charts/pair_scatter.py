@@ -6,19 +6,19 @@ import streamlit as st
 from charts.chart import Chart
 
 
-def _create_figure(data: pd.DataFrame, x_col: str, y_col: str, display_config: dict) -> go.Figure:
-    pair = data[[x_col, y_col]].dropna()
-    x_title = display_config[x_col]["title"]
-    y_title = display_config[y_col]["title"]
+def _create_figure(habits: pd.DataFrame, x_habit: str, y_habit: str, display_config: dict) -> go.Figure:
+    pair = habits[[x_habit, y_habit]].dropna()
+    x_title = display_config[x_habit]["title"]
+    y_title = display_config[y_habit]["title"]
 
-    counts = pair.groupby([x_col, y_col]).size().reset_index(name="count")
+    counts = pair.groupby([x_habit, y_habit]).size().reset_index(name="count")
     max_count = counts["count"].max()
 
     fig = go.Figure()
     fig.add_trace(
         go.Scatter(
-            x=counts[x_col],
-            y=counts[y_col],
+            x=counts[x_habit],
+            y=counts[y_habit],
             mode="markers",
             marker=dict(
                 size=counts["count"],
@@ -33,17 +33,17 @@ def _create_figure(data: pd.DataFrame, x_col: str, y_col: str, display_config: d
         )
     )
 
-    can_fit = len(pair) >= 2 and pair[x_col].nunique() >= 2
+    can_fit = len(pair) >= 2 and pair[x_habit].nunique() >= 2
     if can_fit:
-        a, b = np.polyfit(pair[x_col], pair[y_col], 1)
-        x = np.array([pair[x_col].min(), pair[x_col].max()])
+        a, b = np.polyfit(pair[x_habit], pair[y_habit], 1)
+        x_range = np.array([pair[x_habit].min(), pair[x_habit].max()])
         fig.add_trace(
             go.Scatter(
-                x=x,
-                y=a * x + b,
+                x=x_range,
+                y=a * x_range + b,
                 mode="lines",
                 line=dict(color="firebrick", dash="dash"),
-                name=f"Trend (r={pair[x_col].corr(pair[y_col]):.2f}, n={len(pair)})",
+                name=f"Trend (r={pair[x_habit].corr(pair[y_habit]):.2f}, n={len(pair)})",
             )
         )
 
@@ -62,12 +62,12 @@ def _create_figure(data: pd.DataFrame, x_col: str, y_col: str, display_config: d
 class PairScatterChart(Chart):
     def _plot(self, habits: pd.DataFrame, display_config: dict) -> None:
         selectable = self._selectable(habits, display_config)
-        habit_titles = lambda habit: display_config[habit]["title"]
         default_y = next(
             (habit for habit, cfg in display_config.items() if cfg.get("default_y") and habit in selectable),
             None
         )
 
+        habit_titles = lambda habit: display_config[habit]["title"]
         col_x, col_y = st.columns(2)
         with col_y:
             y_index = selectable.index(default_y) if default_y in selectable else 0

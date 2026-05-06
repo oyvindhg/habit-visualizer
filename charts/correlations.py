@@ -6,8 +6,8 @@ import streamlit as st
 from charts.chart import Chart
 
 
-def _create_figure(data: pd.DataFrame, display_config: dict) -> go.Figure:
-    corr = data.corr()
+def _create_figure(habits: pd.DataFrame, display_config: dict) -> go.Figure:
+    corr = habits.corr()
     labels = [display_config[habit]["title"] for habit in corr.columns]
 
     fig = go.Figure(
