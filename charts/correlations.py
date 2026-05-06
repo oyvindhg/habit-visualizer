@@ -6,7 +6,7 @@ import streamlit as st
 from charts.chart import Chart
 
 
-def _create_figure(habits: pd.DataFrame, display_config: dict) -> go.Figure:
+def _create_figure(habits: pd.DataFrame, display_config: dict, is_mobile: bool) -> go.Figure:
     corr = habits.corr()
     labels = [display_config[habit]["title"] for habit in corr.columns]
 
@@ -22,15 +22,22 @@ def _create_figure(habits: pd.DataFrame, display_config: dict) -> go.Figure:
             texttemplate="%{text}",
             textfont=dict(size=10),
             hovertemplate="%{y} vs %{x}: %{z:.2f}<extra></extra>",
-            colorbar=dict(title="r", thickness=12)
+            colorbar=dict(
+                title=dict(text="" if is_mobile else "r"),
+                thickness=12,
+                orientation="h" if is_mobile else "v",
+                y=1.08 if is_mobile else 0.5,
+                yanchor="bottom" if is_mobile else "middle",
+                len=1.0,
+            ),
         )
     )
 
     fig.update_layout(
-        height=600,
-        margin=dict(l=120, r=20, t=20, b=120),
-        xaxis=dict(side="bottom", tickangle=-30),
-        yaxis=dict(autorange="reversed")
+        height=400 if is_mobile else 600,
+        margin=dict(l=60 if is_mobile else 120, r=20, t=20, b=120),
+        xaxis=dict(side="bottom", tickangle=-45 if is_mobile else -30),
+        yaxis=dict(autorange="reversed", tickangle=45 if is_mobile else 0)
     )
 
     return fig
@@ -39,4 +46,5 @@ def _create_figure(habits: pd.DataFrame, display_config: dict) -> go.Figure:
 class CorrelationMatrixChart(Chart):
     def _plot(self, habits: pd.DataFrame, display_config: dict) -> None:
         selectable = self._selectable(habits, display_config)
-        st.plotly_chart(_create_figure(habits[selectable], display_config), width="stretch")
+        is_mobile = st.session_state.get("mobile")
+        st.plotly_chart(_create_figure(habits[selectable], display_config, is_mobile), width="stretch")

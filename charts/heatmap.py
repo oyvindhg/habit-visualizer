@@ -35,59 +35,57 @@ def _get_week_number(date: pd.Timestamp) -> int:
     return week
 
 
-def _create_month_separators(df: pd.DataFrame, color: str) -> list[dict]:
+def _create_month_separators(df: pd.DataFrame, color: str, is_mobile: bool) -> list[dict]:
     month_ends = df[df.index.is_month_end]
     line = dict(color=color, width=3.5)
     shapes = []
     for month_num, (_, row) in enumerate(month_ends.iterrows()):
         if month_num >= len(month_ends) - 1:
             continue
-        week_number = row["week"]
-        day_of_week = row["day_of_week"]
+        week, day_of_week = row["week"], row["day_of_week"]
         shapes.append(
-            # Add upper, right side vertical line
             dict(
                 type="line",
                 xref="x",
                 yref="y",
-                x0=week_number + 0.5,
-                x1=week_number + 0.5,
-                y0=-0.5,
-                y1=day_of_week + 0.5,
+                x0=-0.5 if is_mobile else week + 0.5,
+                x1=day_of_week + 0.5 if is_mobile else week + 0.5,
+                y0=week + 0.5 if is_mobile else -0.5,
+                y1=week + 0.5 if is_mobile else day_of_week + 0.5,
                 line=line
             )
         )
         if day_of_week < 6:
-            # Add horizontal line
             shapes.append(
                 dict(
                     type="line",
                     xref="x",
                     yref="y",
-                    x0=week_number - 0.5,
-                    x1=week_number + 0.5,
-                    y0=day_of_week + 0.5,
-                    y1=day_of_week + 0.5,
+                    x0=day_of_week + 0.5 if is_mobile else week - 0.5,
+                    x1=day_of_week + 0.5 if is_mobile else week + 0.5,
+                    y0=week - 0.5 if is_mobile else day_of_week + 0.5,
+                    y1=week + 0.5 if is_mobile else day_of_week + 0.5,
                     line=line
                 )
             )
-            # Add lower, left side vertical line
             shapes.append(
                 dict(
                     type="line",
                     xref="x",
                     yref="y",
-                    x0=week_number - 0.5,
-                    x1=week_number - 0.5,
-                    y0=day_of_week + 0.5,
-                    y1=6.5,
+                    x0=day_of_week + 0.5 if is_mobile else week - 0.5,
+                    x1=6.5 if is_mobile else week - 0.5,
+                    y0=week - 0.5 if is_mobile else day_of_week + 0.5,
+                    y1=week - 0.5 if is_mobile else 6.5,
                     line=line
                 )
             )
+
     return shapes
 
 
-def _create_figure(values: pd.Series, year: int, display_config: dict) -> go.Figure:
+def _create_figure(values: pd.Series, year: int, display_config: dict, is_mobile: bool) -> go.Figure:
+
     all_dates = pd.date_range(f"{year}-01-01", f"{year}-12-31")
     df = pd.DataFrame(index=all_dates)
     df["value"] = values.reindex(all_dates)
@@ -95,8 +93,14 @@ def _create_figure(values: pd.Series, year: int, display_config: dict) -> go.Fig
     df["week"] = [_get_week_number(d) for d in df.index]
     df["date_str"] = df.index.strftime("%Y-%m-%d")
 
-    grid = df.pivot_table(index="day_of_week", columns="week", values="value", aggfunc="first")
-    date_grid = df.pivot_table(index="day_of_week", columns="week", values="date_str", aggfunc="first")
+    if is_mobile:
+        grid = df.pivot_table(index="week", columns="day_of_week", values="value", aggfunc="first")
+        date_grid = df.pivot_table(index="week", columns="day_of_week", values="date_str", aggfunc="first")
+        x, y = list(calendar.day_abbr), grid.index.tolist()
+    else:
+        grid = df.pivot_table(index="day_of_week", columns="week", values="value", aggfunc="first")
+        date_grid = df.pivot_table(index="day_of_week", columns="week", values="date_str", aggfunc="first")
+        x, y = grid.columns.tolist(), list(calendar.day_abbr)
 
     boundaries = display_config["boundaries"]
     labels = display_config["labels"]
@@ -108,8 +112,8 @@ def _create_figure(values: pd.Series, year: int, display_config: dict) -> go.Fig
     fig = go.Figure(
         data=go.Heatmap(
             z=grid.values,
-            x=grid.columns.tolist(),
-            y=list(calendar.day_abbr),
+            x=x,
+            y=y,
             customdata=date_grid.values,
             colorscale=colorscale,
             zmin=boundaries[0],
@@ -122,49 +126,38 @@ def _create_figure(values: pd.Series, year: int, display_config: dict) -> go.Fig
                 tickvals=color_ticks,
                 ticktext=labels,
                 thickness=12,
-                len=0.6,
-                y=-0.5
-            )
+                len=1.2 if is_mobile else 0.5,
+                y=-0.1 if is_mobile else -0.4,
+            ),
         )
     )
 
-    month_starts = []
-    for month_num in range(1, 13):
-        first_of_month = pd.Timestamp(year=year, month=month_num, day=1)
-        month_starts.append((month_num, _get_week_number(first_of_month)))
-
+    month_starts = [(m, _get_week_number(pd.Timestamp(year=year, month=m, day=1))) for m in range(1, 13)]
     background_color = "rgba(0,0,0,0)"  # transparent
     separator_color = "rgba(0,0,0,1)"  # black
 
     fig.update_layout(
-        title=dict(
-            text=display_config["title"],
-            x=0.5,
-            xanchor="center",
-            y=0.95
-        ),
-        height=380,
-        width=1300,
-        margin=dict(
-            l=70,
-            r=30,
-            t=80,
-            b=100
-        ),
-        xaxis=dict(
+        title=dict(text="" if is_mobile else display_config["title"], x=0.5, xanchor="center", y=0.96),
+        height=730 if is_mobile else 380,
+        width=300 if is_mobile else 1300,
+        xaxis=dict(side="top", showgrid=False) if is_mobile else dict(
             tickmode="array",
             tickvals=[w + 1 for _, w in month_starts],
             ticktext=[calendar.month_abbr[m] for m, _ in month_starts],
             side="top",
-            showgrid=False
+            showgrid=False,
         ),
         yaxis=dict(
+            tickmode="array",
+            tickvals=[w + 1 for _, w in month_starts],
+            ticktext=[calendar.month_abbr[m] for m, _ in month_starts],
             autorange="reversed",
-            showgrid=False
-        ),
+            showgrid=False,
+        ) if is_mobile else dict(autorange="reversed", showgrid=False),
+        margin=dict(l=130 if is_mobile else 70, r=30, t=80, b=100),
         plot_bgcolor=background_color,
         paper_bgcolor=background_color,
-        shapes=_create_month_separators(df, separator_color)
+        shapes=_create_month_separators(df, separator_color, is_mobile),
     )
 
     return fig
@@ -186,4 +179,5 @@ class HeatmapChart(Chart):
         with chart:
             config = display_config[selected_habit]
             values = habits[habits.index.year == year][selected_habit]
-            st.plotly_chart(_create_figure(values, year, config), width="content")
+            is_mobile = st.session_state.get("mobile")
+            st.plotly_chart(_create_figure(values, year, config, is_mobile), width="content")

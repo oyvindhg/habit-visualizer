@@ -17,7 +17,7 @@ def _get_binary_columns(data: pd.DataFrame) -> list[str]:
     return [habit for habit in data.columns if _is_binary(data[habit])]
 
 
-def _create_figure(habits: pd.DataFrame, habit: str, display_config: dict) -> go.Figure:
+def _create_figure(habits: pd.DataFrame, habit: str, display_config: dict, is_mobile: bool) -> go.Figure:
     other_habits = [h for h in habits.columns if h != habit]
     condition_title = display_config[habit]["title"]
 
@@ -30,14 +30,14 @@ def _create_figure(habits: pd.DataFrame, habit: str, display_config: dict) -> go
     off_day_means = off_days[other_habits].mean()
     titles = [display_config[h]["title"] for h in other_habits]
 
-    col_count = 3
+    col_count = 2 if is_mobile else 3
     row_count = math.ceil(len(other_habits) / col_count)
 
     fig = make_subplots(
         rows=row_count,
         cols=col_count,
         subplot_titles=titles,
-        vertical_spacing=0.12
+        vertical_spacing=min(0.12, 0.8 / row_count),
     )
 
     for i, other_habit in enumerate(other_habits):
@@ -79,4 +79,5 @@ class ConditionalComparisonChart(Chart):
             format_func=lambda habit: display_config[habit]["title"],
             key="condition_habit",
         )
-        st.plotly_chart(_create_figure(selectable, selected_habit, display_config), width="stretch")
+        is_mobile = st.session_state.get("mobile")
+        st.plotly_chart(_create_figure(selectable, selected_habit, display_config, is_mobile), width="stretch")

@@ -33,7 +33,11 @@ def run() -> None:
     habits = load_habits()
     display_config = load_display_config()
 
-    st.title("Habit Visualizer")
+    title, toggle = st.columns([6, 1])
+    with title:
+        st.title("Habit Visualizer")
+    with toggle:
+        st.toggle("Mobile view", key="mobile")
     heatmap_tab, timeseries_tab, correlations_tab, patterns_tab = st.tabs(
         [
             "Heatmap",
