@@ -13,7 +13,6 @@ from sources.custom_entry_getters import get_rich_text_time_as_hours, get_from_m
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool for transforming raw json data to habits.csv")
-    parser.add_argument('-c', '--config', type=str, default="sources.json", help="Path to JSON config file")
     parser.add_argument('-y', '--year', type=int, default=2025, help="Year")
     return parser.parse_args()
 
@@ -27,10 +26,10 @@ def get_custom_function_map():
 def get_transformer(source: str, property_name: str, raw_data_path: Path, year: int) -> Transformer:
     match source:
         case "notion":
-            with open(raw_data_path / "notion_data.json", "r", encoding="utf-8") as file:
+            with open(raw_data_path / f"notion-data-{year}.json", "r", encoding="utf-8") as file:
                 return NotionTransformer(json.load(file), year)
         case "fitbit":
-            with open(raw_data_path / f"fitbit_{property_name}.json", "r", encoding="utf-8") as file:
+            with open(raw_data_path / f"fitbit-{property_name}-{year}.json", "r", encoding="utf-8") as file:
                 return FitbitTransformer(json.load(file), year)
         case _:
             raise ValueError(f"{source} is not a valid source")
@@ -38,16 +37,15 @@ def get_transformer(source: str, property_name: str, raw_data_path: Path, year: 
 
 def run():
     args = parse_arguments()
-    config_path = args.config
     year = args.year
     load_dotenv()
 
     custom_function_map = get_custom_function_map()
 
     data_dir = Path(os.getenv("DATA_DIR")).expanduser()
-    raw_data_path = data_dir / f"raw/{year}"
+    raw_data_path = data_dir / "raw"
 
-    with open(config_path, 'r', encoding="utf-8") as config_file:
+    with open(data_dir / "sources.json", 'r', encoding="utf-8") as config_file:
         configs = json.load(config_file)
 
     series_map = {}

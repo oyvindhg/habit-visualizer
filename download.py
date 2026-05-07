@@ -40,7 +40,7 @@ def run():
     load_dotenv()
 
     data_dir = Path(os.getenv("DATA_DIR")).expanduser()
-    raw_data_path = str(data_dir / f"raw/{year}")
+    raw_data_path = str(data_dir / "raw")
     Path(raw_data_path).mkdir(parents=True, exist_ok=True)
 
     client = get_client(website, year)

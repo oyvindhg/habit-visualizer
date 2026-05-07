@@ -107,7 +107,7 @@ class FitbitClient(Client):
         url = f"{self.settings.base_url}/body/{label}/date/{year}-01-01/{year}-12-31.json"
         response = requests.get(url, headers=headers, timeout=30)
         data = response.json()
-        with open(f"{data_path}/fitbit_{label}.json", "w", encoding="utf-8") as file:
+        with open(f"{data_path}/fitbit-{label}-{year}.json", "w", encoding="utf-8") as file:
             json.dump(data, file)
 
         # Step count data
@@ -115,7 +115,7 @@ class FitbitClient(Client):
         url = f"{self.settings.base_url}/activities/{label}/date/{year}-01-01/{year}-12-31.json"
         response = requests.get(url, headers=headers, timeout=30)
         data = response.json()
-        with open(f"{data_path}/fitbit_{label}.json", "w", encoding="utf-8") as file:
+        with open(f"{data_path}/fitbit-{label}-{year}.json", "w", encoding="utf-8") as file:
             json.dump(data, file)
 
         # Sleep data
@@ -138,5 +138,5 @@ class FitbitClient(Client):
             quarter_sleep_entries.sort(key=lambda x: datetime.fromisoformat(x["dateOfSleep"]))
             full_year_sleep_data.extend(quarter_sleep_entries)
         fitbit_sleep_data = {f"{label}": full_year_sleep_data}
-        with open(f"{data_path}/fitbit_{label}.json", "w", encoding="utf-8") as file:
+        with open(f"{data_path}/fitbit-{label}-{year}.json", "w", encoding="utf-8") as file:
             json.dump(fitbit_sleep_data, file)

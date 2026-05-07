@@ -54,5 +54,5 @@ class NotionClient(Client):
             if not cursor:
                 break
 
-        with open(f"{data_path}/notion_data.json", "w", encoding="utf-8") as file:
+        with open(f"{data_path}/notion-data-{year}.json", "w", encoding="utf-8") as file:
             json.dump(data, file)
