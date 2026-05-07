@@ -46,5 +46,13 @@ def _create_figure(habits: pd.DataFrame, display_config: dict, is_mobile: bool) 
 class CorrelationMatrixChart(Chart):
     def _plot(self, habits: pd.DataFrame, display_config: dict) -> None:
         selectable = self._selectable(habits, display_config)
+        selected = st.multiselect(
+            "Habits",
+            selectable,
+            default=selectable[:8],
+            format_func=lambda h: display_config[h]["title"],
+        )
+        if not selected:
+            return
         is_mobile = st.session_state.get("mobile")
-        st.plotly_chart(_create_figure(habits[selectable], display_config, is_mobile), width="stretch")
+        st.plotly_chart(_create_figure(habits[selected], display_config, is_mobile), width="stretch")
