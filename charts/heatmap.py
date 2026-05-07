@@ -84,8 +84,14 @@ def _create_month_separators(df: pd.DataFrame, color: str, is_mobile: bool) -> l
     return shapes
 
 
-def _create_figure(values: pd.Series, year: int, display_config: dict, is_mobile: bool) -> go.Figure:
-
+def _create_figure(
+        values: pd.Series,
+        year: int,
+        display_config: dict,
+        is_mobile: bool,
+        show_colorbar: bool,
+        title: str
+) -> go.Figure:
     all_dates = pd.date_range(f"{year}-01-01", f"{year}-12-31")
     df = pd.DataFrame(index=all_dates)
     df["value"] = values.reindex(all_dates)
@@ -121,6 +127,7 @@ def _create_figure(values: pd.Series, year: int, display_config: dict, is_mobile
             xgap=2,
             ygap=2,
             hovertemplate=hover_template,
+            showscale=show_colorbar,
             colorbar=dict(
                 orientation="h",
                 tickvals=color_ticks,
@@ -137,7 +144,7 @@ def _create_figure(values: pd.Series, year: int, display_config: dict, is_mobile
     separator_color = "rgba(0,0,0,1)"  # black
 
     fig.update_layout(
-        title=dict(text="" if is_mobile else display_config["title"], x=0.5, xanchor="center", y=0.96),
+        title=dict(text=str(year) if is_mobile else (title or str(year)), x=0.5, xanchor="center", y=0.96),
         height=730 if is_mobile else 380,
         width=300 if is_mobile else 1300,
         xaxis=dict(side="top", showgrid=False) if is_mobile else dict(
@@ -154,7 +161,7 @@ def _create_figure(values: pd.Series, year: int, display_config: dict, is_mobile
             autorange="reversed",
             showgrid=False,
         ) if is_mobile else dict(autorange="reversed", showgrid=False),
-        margin=dict(l=130 if is_mobile else 70, r=30, t=80, b=100),
+        margin=dict(l=130 if is_mobile else 70, r=30, t=100 if is_mobile else 80, b=100),
         plot_bgcolor=background_color,
         paper_bgcolor=background_color,
         shapes=_create_month_separators(df, separator_color, is_mobile),
@@ -167,8 +174,6 @@ class HeatmapChart(Chart):
     def _plot(self, habits: pd.DataFrame, display_config: dict) -> None:
         controls, chart = st.columns([1, 4])
         with controls:
-            years = sorted(habits.index.year.unique())
-            year = st.selectbox("Year", years, index=len(years) - 1)
             selectable = self._selectable(habits, display_config)
             selected_habit = st.selectbox(
                 "Habit",
@@ -178,6 +183,10 @@ class HeatmapChart(Chart):
 
         with chart:
             config = display_config[selected_habit]
-            values = habits[habits.index.year == year][selected_habit]
             is_mobile = st.session_state.get("mobile")
-            st.plotly_chart(_create_figure(values, year, config, is_mobile), width="content")
+            years = sorted(habits.index.year.unique(), reverse=True)
+            for i, year in enumerate(years):
+                values = habits[habits.index.year == year][selected_habit]
+                show_colorbar = i == 0
+                title = f"{config['title']} - {year}" if i == 0 else None
+                st.plotly_chart(_create_figure(values, year, config, is_mobile, show_colorbar, title), width="content")
