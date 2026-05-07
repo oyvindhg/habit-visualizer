@@ -50,10 +50,13 @@ def run():
 
     series_map = {}
     for config in configs:
+        if year < config.get("from", 0) or year > config.get("to", 9999):
+            continue
+
         property_name = config["property"]
         original = config["original"]
         source = config["source"]
-        custom_function_name = config["custom_function"]
+        custom_function_name = config.get("custom_function", None)
 
         custom_entry_getter = custom_function_map[custom_function_name] if custom_function_name else None
 

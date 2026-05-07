@@ -2,61 +2,71 @@
     {
         "property": "mood",
         "source": "notion",
-        "original": "Mood",
-        "custom_function": null
+        "original": "Mood"
     },
     {
         "property": "drinks",
         "source": "notion",
-        "original": "Drinks",
-        "custom_function": null
+        "original": "Drinks"
     },
     {
         "property": "cooked",
         "source": "notion",
-        "original": "Cooked",
-        "custom_function": null
+        "original": "Cooked"
     },
     {
         "property": "dating",
         "source": "notion",
         "original": "Social-Date",
-        "custom_function": "get_from_multiselect"
+        "custom_function": "get_from_multiselect",
+        "from": 2025
+    },
+    {
+        "property": "dating",
+        "source": "notion",
+        "original": "Dating",
+        "to": 2024
     },
     {
         "property": "friends",
         "source": "notion",
         "original": "Social-Friends",
-        "custom_function": "get_from_multiselect"
+        "custom_function": "get_from_multiselect",
+        "from": 2025
+    },
+    {
+        "property": "friends",
+        "source": "notion",
+        "original": "Friends",
+        "to": 2024
     },
     {
         "property": "japanese",
         "source": "notion",
-        "original": "Japanese",
-        "custom_function": null
+        "original": "Japanese"
     },
     {
         "property": "programmed",
         "source": "notion",
         "original": "Hobbies-Programmed",
-        "custom_function": "get_from_multiselect"
+        "custom_function": "get_from_multiselect",
+        "from": 2025
     },
     {
         "property": "gym",
         "source": "notion",
         "original": "Exercise-Gym",
-        "custom_function": "get_from_multiselect"
+        "custom_function": "get_from_multiselect",
+        "from": 2025
     },
     {
         "property": "sleep",
         "source": "fitbit",
-        "original": "sleep",
-        "custom_function": null
+        "original": "sleep"
     },
     {
         "property": "steps",
         "source": "fitbit",
-        "original": "activities-steps",
-        "custom_function": null
+        "original": "activities-steps"
     }
 ]

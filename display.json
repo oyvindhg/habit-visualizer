@@ -32,7 +32,7 @@
     },
     {
         "property": "drinks",
-        "title": "Number of alcolholic drinks",
+        "title": "Number of alcoholic drinks",
         "color_style": "YlOrBr",
         "labels": [
             "0",
