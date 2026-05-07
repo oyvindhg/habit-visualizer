@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from sources.fitbit_transformer import FitbitTransformer
 from sources.notion_transformer import NotionTransformer
 from sources.transformer import Transformer
-from sources.custom_entry_getters import get_rich_text_time_as_hours, get_from_multiselect
+from sources.custom_entry_getters import get_rich_text_time_as_hours, get_from_multiselect, get_as_bool
 
 
 def parse_arguments():
@@ -20,7 +20,8 @@ def parse_arguments():
 def get_custom_function_map():
     return {
         "get_rich_text_time_as_hours": get_rich_text_time_as_hours,
-        "get_from_multiselect": get_from_multiselect
+        "get_from_multiselect": get_from_multiselect,
+        "get_as_bool": get_as_bool
     }
 
 def get_transformer(source: str, property_name: str, raw_data_path: Path, year: int) -> Transformer:
