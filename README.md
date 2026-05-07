@@ -51,9 +51,9 @@ FITBIT_CLIENT_SECRET=your_client_secret
 
 ### Download data
 ```
-python download.py -y 2025 -w fitbit
+python download.py -y 2024 -w fitbit
 ```
-`-y` specifies the year of the data, defaulting to `2025`
+`-y` specifies the year of the data, defaulting to the current year
 
 `-w` specifies the website to download data from, defaulting to `notion`. Only `notion` and `fitbit` are valid options.
 
@@ -61,12 +61,13 @@ python download.py -y 2025 -w fitbit
 ```
 python transform.py -y 2025 -c configs/my-source-config.json
 ```
-`-y` specifies the year of the data, defaulting to `2025`
+`-y` specifies the year of the data, defaulting to the current year
 
-`-c` specifies the path to the config file which specifies the properties to be transformed, defaulting to `sources.json`
-
+Note that a `sources.json` file must be present in the `DATA_DIR` directory.
 
 ### Visualize data
 ```
 streamlit run visualize.py
 ```
+
+Note that a directory `DATA_DIR/displays` must exist with at least one `*.json` display config file inside.

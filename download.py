@@ -1,5 +1,6 @@
 import os
 import argparse
+from datetime import datetime
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -10,7 +11,7 @@ from sources.notion_client import NotionClient
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool to download habit tracker data")
-    parser.add_argument('-y', '--year', type=int, default=2025, help="Year to visualize")
+    parser.add_argument('-y', '--year', type=int, default=datetime.now().year, help="Year to download")
     parser.add_argument('-w', '--website', choices=['notion', 'fitbit'], default='notion',
                         help="Which website to download from")
     return parser.parse_args()
@@ -45,7 +46,7 @@ def run():
 
     client = get_client(website, year)
     client.download_data(raw_data_path, year)
-    print(f"Downloaded to {raw_data_path}")
+    print(f"Downloaded to {raw_data_path} for {website} year {year}")
 
 
 if __name__ == "__main__":

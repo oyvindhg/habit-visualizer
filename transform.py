@@ -1,6 +1,7 @@
 import json
 import argparse
 import os
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -13,7 +14,7 @@ from sources.custom_entry_getters import get_rich_text_time_as_hours, get_from_m
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Tool for transforming raw json data to habits.csv")
-    parser.add_argument('-y', '--year', type=int, default=2025, help="Year")
+    parser.add_argument('-y', '--year', type=int, default=datetime.now().year, help="Year")
     return parser.parse_args()
 
 
@@ -46,7 +47,7 @@ def run():
     data_dir = Path(os.getenv("DATA_DIR")).expanduser()
     raw_data_path = data_dir / "raw"
 
-    with open(data_dir / "sources.json", 'r', encoding="utf-8") as config_file:
+    with open(data_dir / "sources.example.json", 'r', encoding="utf-8") as config_file:
         configs = json.load(config_file)
 
     series_map = {}
